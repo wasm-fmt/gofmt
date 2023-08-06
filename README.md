@@ -1,3 +1,6 @@
+[![Build](https://github.com/wasm-fmt/gofmt/actions/workflows/build.yml/badge.svg)](https://github.com/wasm-fmt/gofmt/actions/workflows/build.yml)
+[![npm](https://img.shields.io/npm/v/@wasm-fmt/gofmt)](https://www.npmjs.com/package/@wasm-fmt/gofmt)
+
 # Build from source
 
 ```bash
