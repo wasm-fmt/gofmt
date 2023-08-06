@@ -1,5 +1,5 @@
 diff --git a/go_wasm.js b/go_wasm.js
-index 8021b44..d0db741 100644
+index 8021b44..21cfd42 100644
 --- a/go_wasm.js
 +++ b/go_wasm.js
 @@ -4,135 +4,11 @@
@@ -168,7 +168,7 @@ index 8021b44..d0db741 100644
 +			const buf = this._inst.exports.memory.buffer;
 +
 +			const mem = new Uint8Array(buf);
-+			const view = mem.subarray(addr, addr + str.length);
++			const view = mem.subarray(addr);
 +			return encoder.encodeInto(str, view).written;
 +		}
 +
