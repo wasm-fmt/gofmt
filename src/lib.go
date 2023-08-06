@@ -16,15 +16,15 @@ func Format(input_len uint) int {
 	input := buf[:input_len]
 	output, err := format.Source(input)
 	if err != nil {
-		return -copy(input, []byte(err.Error()))
+		return -copy(buf[:], []byte(err.Error()))
 	}
 	result := len(output)
 
 	if result > buf_len {
-		return -copy(input, []byte("Buffer out of memory"))
+		return -copy(buf[:], []byte("Buffer out of memory"))
 	}
 
-	copy(input, output)
+	copy(buf[:], output)
 	return result
 }
 
