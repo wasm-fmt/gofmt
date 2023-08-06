@@ -16,5 +16,8 @@
     "node": ">=16.17.0"
   },
   "keywords": [],
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }
