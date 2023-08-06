@@ -24,10 +24,10 @@ export async function format(input) {
   go.run(inst);
 
   const input_len = go.storeString(input);
-  if (input_len < 0) {
-    throw new Error(go.loadString(-input_len));
+  const output_len = inst.exports.format(input_len);
+  if (output_len < 0) {
+    throw new Error(go.loadString(-output_len));
   }
 
-  const output_len = inst.exports.format(input_len);
   return go.loadString(output_len);
 }
