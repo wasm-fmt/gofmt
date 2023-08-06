@@ -16,11 +16,7 @@ jobs:
                   wget -P ${{ runner.temp }} https://github.com/tinygo-org/tinygo/releases/download/v0.28.1/tinygo_0.28.1_amd64.deb
                   yes | sudo dpkg -i ${{ runner.temp }}/tinygo_0.28.1_amd64.deb
 
-            - run: |
-                  npm run go_wasm
-                  npm run patch
-                  npm run build
-
+            - run: npm run build
             - run: npm run test
 
             - name: publish
