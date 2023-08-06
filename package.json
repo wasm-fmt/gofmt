@@ -1,7 +1,7 @@
 {
   "name": "@wasm-fmt/gofmt",
   "author": "magic-akari <akari.ccino@gamil.com>",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "wasm based gofmt",
   "main": "lib.js",
   "types": "lib.d.ts",
