@@ -342,7 +342,7 @@
 			const buf = this._inst.exports.memory.buffer;
 
 			const mem = new Uint8Array(buf);
-			const view = mem.subarray(addr, addr + str.length);
+			const view = mem.subarray(addr);
 			return encoder.encodeInto(str, view).written;
 		}
 
