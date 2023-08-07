@@ -13,7 +13,7 @@ export async function format(input, wasm_url) {
       wasm_url = new URL(wasm_url);
     }
 
-    if (wasm_url.protocol === "file:") {
+    if (typeof __webpack_require__ !== "function" && wasm_url.protocol === "file:") {
       const fs = await import("node:fs");
       const bytes = fs.readFileSync(wasm_url);
       mod = new WebAssembly.Module(bytes);
