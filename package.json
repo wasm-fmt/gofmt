@@ -10,6 +10,7 @@
     "go_wasm": "cp $(tinygo env TINYGOROOT)/targets/wasm_exec.js ./go_wasm.js",
     "patch": "git apply ./go_wasm.patch",
     "build": "tinygo build -o=lib.wasm -target=wasm -no-debug -stack-size=24kb ./src/lib.go",
+    "postbuild": "npm run go_wasm && npm run patch",
     "test": "node --test"
   },
   "engines": {
