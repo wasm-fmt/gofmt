@@ -1,1 +1,4 @@
-export declare function format(input: string): Promise<string>;
+export declare function format(
+  input: string,
+  wasm_url?: string | URL
+): Promise<string>;
