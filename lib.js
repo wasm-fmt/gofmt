@@ -17,8 +17,8 @@ export async function format(input, wasm_url) {
       const fs = await import("node:fs");
       const bytes = fs.readFileSync(wasm_url);
       mod = new WebAssembly.Module(bytes);
-    } else if ("instantiateStreaming" in WebAssembly) {
-      mod = await WebAssembly.compileStreaming(fetch(wasm_url), go.importObject);
+    } else if ("compileStreaming" in WebAssembly) {
+      mod = await WebAssembly.compileStreaming(fetch(wasm_url));
     } else {
       const response = await fetch(wasm_url);
       const bytes = await response.arrayBuffer();
