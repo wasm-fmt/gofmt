@@ -6,6 +6,18 @@
   "main": "lib.js",
   "types": "lib.d.ts",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./lib.d.ts",
+      "default": "./lib.js"
+    },
+    "./vite": {
+      "types": "./lib.d.ts",
+      "default": "./vite.js"
+    },
+    "./package.json": "./package.json",
+    "./*": "./*"
+  },
   "scripts": {
     "go_wasm": "cp $(tinygo env TINYGOROOT)/targets/wasm_exec.js ./go_wasm.js",
     "patch": "git apply ./go_wasm.patch",
@@ -16,7 +28,11 @@
   "engines": {
     "node": ">=16.17.0"
   },
-  "keywords": [],
+  "keywords": [
+    "wasm",
+    "golang",
+    "formatter"
+  ],
   "license": "MIT",
   "publishConfig": {
     "access": "public"

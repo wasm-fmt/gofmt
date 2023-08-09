@@ -10,27 +10,25 @@ npm install @wasm-fmt/gofmt
 # Usage
 
 ```JavaScript
-import { format } from '@wasm-fmt/gofmt';
+import init, { format } from '@wasm-fmt/gofmt';
+
+await init();
 
 const source = `
 package main
 import "fmt"
-func main(){fmt.Println("Hello, 世界")}
+func main(){fmt.Println("Hello, 世界")
+}
 `;
 
-const formatted = await format(source);
+const formatted = format(source);
 console.log(formatted);
 ```
 
 Vite users tip:
 
 ```JavaScript
-import { format } from '@wasm-fmt/gofmt';
-import wasmUrl from "@wasm-fmt/gofmt/lib.wasm?url";
-
-// ...
-
-const formatted = await format(source, new URL(wasmUrl, import.meta.url));
+import init, { format } from '@wasm-fmt/gofmt/vite';
 ```
 
 # Build from source
