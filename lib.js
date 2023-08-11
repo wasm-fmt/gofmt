@@ -1,10 +1,10 @@
 import { Go } from "./go_wasm.js";
 const go = new Go();
 
-let mod;
+let inst;
 
 export default async function init(wasm_url) {
-    if (!mod) {
+    if (!inst) {
         if (!wasm_url) {
             wasm_url = new URL("lib.wasm", import.meta.url);
         }
@@ -17,28 +17,35 @@ export default async function init(wasm_url) {
             typeof __webpack_require__ !== "function" &&
             wasm_url.protocol === "file:"
         ) {
-            const fs = await import("node:fs");
-            const bytes = fs.readFileSync(wasm_url);
-            mod = new WebAssembly.Module(bytes);
-        } else if ("compileStreaming" in WebAssembly) {
-            mod = await WebAssembly.compileStreaming(fetch(wasm_url));
+            inst = import("node:fs/promises")
+                .then((fs) => fs.readFile(wasm_url))
+                .then((bytes) =>
+                    WebAssembly.instantiate(bytes, go.importObject)
+                );
+        } else if ("instantiateStreaming" in WebAssembly) {
+            inst = WebAssembly.instantiateStreaming(
+                fetch(wasm_url),
+                go.importObject
+            );
         } else {
-            const response = await fetch(wasm_url);
-            const bytes = await response.arrayBuffer();
-            mod = new WebAssembly.Module(bytes);
+            inst = fetch(wasm_url)
+                .then((response) => response.arrayBuffer())
+                .then((bytes) =>
+                    WebAssembly.instantiate(bytes, go.importObject)
+                );
         }
+        inst = (await inst).instance;
+        go.run(inst);
     }
+
+    await inst;
 }
 
 export function format(input) {
-    const inst = new WebAssembly.Instance(mod, go.importObject);
-    go.run(inst);
-
-    const input_len = go.storeString(input);
-    const output_len = inst.exports.format(input_len);
-    if (output_len < 0) {
-        throw new Error(go.loadString(-output_len));
+    const [err, result] = inst.format(input);
+    if (err) {
+        throw new Error(result);
     }
 
-    return go.loadString(output_len);
+    return result;
 }

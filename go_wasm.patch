@@ -1,8 +1,8 @@
 diff --git a/go_wasm.js b/go_wasm.js
-index 8021b44..21cfd42 100644
+index 8021b44..a4836ba 100644
 --- a/go_wasm.js
 +++ b/go_wasm.js
-@@ -4,135 +4,11 @@
+@@ -4,135 +4,10 @@
  //
  // This file has been modified for use by the TinyGo compiler.
  
@@ -132,14 +132,71 @@ index 8021b44..21cfd42 100644
 -
  	const encoder = new TextEncoder("utf-8");
  	const decoder = new TextDecoder("utf-8");
- 	var logLine = [];
+-	var logLine = [];
  
 -	global.Go = class {
 +	export class Go {
  		constructor() {
  			this._callbackTimeouts = new Map();
  			this._nextCallbackTimeoutID = 1;
-@@ -307,10 +183,15 @@
+@@ -249,50 +124,12 @@
+ 			this.importObject = {
+ 				wasi_snapshot_preview1: {
+ 					// https://github.com/WebAssembly/WASI/blob/main/phases/snapshot/docs.md#fd_write
+-					fd_write: function(fd, iovs_ptr, iovs_len, nwritten_ptr) {
+-						let nwritten = 0;
+-						if (fd == 1) {
+-							for (let iovs_i=0; iovs_i<iovs_len;iovs_i++) {
+-								let iov_ptr = iovs_ptr+iovs_i*8; // assuming wasm32
+-								let ptr = mem().getUint32(iov_ptr + 0, true);
+-								let len = mem().getUint32(iov_ptr + 4, true);
+-								nwritten += len;
+-								for (let i=0; i<len; i++) {
+-									let c = mem().getUint8(ptr+i);
+-									if (c == 13) { // CR
+-										// ignore
+-									} else if (c == 10) { // LF
+-										// write line
+-										let line = decoder.decode(new Uint8Array(logLine));
+-										logLine = [];
+-										console.log(line);
+-									} else {
+-										logLine.push(c);
+-									}
+-								}
+-							}
+-						} else {
+-							console.error('invalid file descriptor:', fd);
+-						}
+-						mem().setUint32(nwritten_ptr, nwritten, true);
+-						return 0;
+-					},
+-					fd_close: () => 0,      // dummy
+-					fd_fdstat_get: () => 0, // dummy
+-					fd_seek: () => 0,       // dummy
+-					"proc_exit": (code) => {
+-						if (global.process) {
+-							// Node.js
+-							process.exit(code);
+-						} else {
+-							// Can't exit in a browser.
+-							throw 'trying to exit with code ' + code;
+-						}
+-					},
+-					random_get: (bufPtr, bufLen) => {
+-						crypto.getRandomValues(loadSlice(bufPtr, bufLen));
+-						return 0;
+-					},
++					fd_write() {},
++					fd_close() {},
++					fd_fdstat_get() {},
++					fd_seek() {},
++					proc_exit() {},
++					random_get() {}
+ 				},
+ 				env: {
+ 					// func ticks() float64
+@@ -307,10 +144,15 @@
  					},
  
  					// func finalizeRef(v ref)
@@ -159,39 +216,30 @@ index 8021b44..21cfd42 100644
  					},
  
  					// func stringVal(value string) ref
-@@ -456,6 +337,22 @@
- 			};
- 		}
- 
-+		storeString(str) {
-+			const addr = this._inst.exports.getBuffer();
-+			const buf = this._inst.exports.memory.buffer;
-+
-+			const mem = new Uint8Array(buf);
-+			const view = mem.subarray(addr);
-+			return encoder.encodeInto(str, view).written;
-+		}
-+
-+		loadString(len) {
-+			const addr = this._inst.exports.getBuffer();
-+			const buf = this._inst.exports.memory.buffer;
-+
-+			return decoder.decode(new DataView(buf, addr, len));
-+		}
-+
- 		async run(instance) {
- 			this._inst = instance;
- 			this._values = [ // JS values that Go currently has references to, indexed by reference id
-@@ -464,7 +361,7 @@
+@@ -464,7 +306,12 @@
  				null,
  				true,
  				false,
 -				global,
-+				"undefined" != typeof globalThis ? globalThis : global || self,
++				// fake global
++				{
++					set format(fn){ instance.format = fn; },
++					Array,
++					Object,
++				},
  				this,
  			];
  			this._goRefCounts = []; // number of references that Go has to a JS value, indexed by reference id
-@@ -511,25 +408,3 @@
+@@ -472,8 +319,6 @@
+ 			this._idPool = [];      // unused ids that have been garbage collected
+ 			this.exited = false;    // whether the Go program has exited
+ 
+-			const mem = new DataView(this._inst.exports.memory.buffer)
+-
+ 			while (true) {
+ 				const callbackPromise = new Promise((resolve) => {
+ 					this._resolveCallbackPromise = () => {
+@@ -511,25 +356,3 @@
  			};
  		}
  	}

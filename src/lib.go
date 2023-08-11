@@ -1,31 +1,23 @@
 package main
 
-import "go/format"
+import (
+	"go/format"
+	"syscall/js"
+)
 
-const buf_len = 8192
+func Format(this js.Value, args []js.Value) any {
+	input := ([]byte)(args[0].String())
 
-var buf [buf_len]byte
-
-//go:export getBuffer
-func GetBuffer() *byte {
-	return &buf[0]
-}
-
-//go:export format
-func Format(input_len uint) int {
-	input := buf[:input_len]
 	output, err := format.Source(input)
 	if err != nil {
-		return -copy(buf[:], []byte(err.Error()))
-	}
-	result := len(output)
-
-	if result > buf_len {
-		return -copy(buf[:], []byte("Buffer out of memory"))
+		return []interface{}{true, err.Error()}
 	}
 
-	copy(buf[:], output)
-	return result
+	return []interface{}{false, string(output)}
 }
 
-func main() {}
+func main() {
+	done := make(chan bool)
+	js.Global().Set("format", js.FuncOf(Format))
+	<-done
+}
