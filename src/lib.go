@@ -10,10 +10,10 @@ func Format(this js.Value, args []js.Value) any {
 
 	output, err := format.Source(input)
 	if err != nil {
-		return []interface{}{true, err.Error()}
+		return []any{true, err.Error()}
 	}
 
-	return []interface{}{false, string(output)}
+	return []any{false, string(output)}
 }
 
 func main() {
