@@ -1,0 +1,50 @@
+name: Build
+
+on:
+    create:
+        tags:
+            - "v*"
+
+jobs:
+    build:
+        permissions:
+            packages: write
+            contents: write
+            id-token: write
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version-file: ".node-version"
+                  registry-url: "https://registry.npmjs.org"
+
+            - run: |
+                  wget -P ${{ runner.temp }} https://github.com/tinygo-org/tinygo/releases/download/v0.28.1/tinygo_0.28.1_amd64.deb
+                  yes | sudo dpkg -i ${{ runner.temp }}/tinygo_0.28.1_amd64.deb
+
+            - run: npm run build
+
+            - name: Publish to npmjs
+              run: npm publish
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - uses: actions/setup-node@v3
+              with:
+                  node-version-file: ".node-version"
+                  registry-url: "https://npm.pkg.github.com"
+
+            - name: Publish to github packages
+              run: npm publish
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Pack
+              run: npm pack
+
+            - name: Publish to Github Releases
+              uses: softprops/action-gh-release@c9b46fe7aad9f02afd89b12450b780f52dacfb2d
+              with:
+                  files: |
+                      *.tgz

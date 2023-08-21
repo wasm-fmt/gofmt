@@ -1,40 +1,41 @@
 {
-  "name": "@wasm-fmt/gofmt",
-  "author": "magic-akari <akari.ccino@gamil.com>",
-  "version": "0.3.1",
-  "description": "wasm based gofmt",
-  "main": "lib.js",
-  "types": "lib.d.ts",
-  "type": "module",
-  "exports": {
-    ".": {
-      "types": "./lib.d.ts",
-      "default": "./lib.js"
+    "name": "@wasm-fmt/gofmt",
+    "author": "magic-akari <akari.ccino@gamil.com>",
+    "version": "0.3.1",
+    "description": "wasm based gofmt",
+    "main": "lib.js",
+    "types": "lib.d.ts",
+    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./lib.d.ts",
+            "default": "./lib.js"
+        },
+        "./vite": {
+            "types": "./lib.d.ts",
+            "default": "./vite.js"
+        },
+        "./package.json": "./package.json",
+        "./*": "./*"
     },
-    "./vite": {
-      "types": "./lib.d.ts",
-      "default": "./vite.js"
+    "scripts": {
+        "go_wasm": "cp $(tinygo env TINYGOROOT)/targets/wasm_exec.js ./go_wasm.js",
+        "patch": "git apply ./go_wasm.patch",
+        "build": "tinygo build -o=lib.wasm -target=wasm -no-debug -stack-size=24kb ./src/lib.go",
+        "postbuild": "npm run go_wasm && npm run patch",
+        "test": "node --test"
     },
-    "./package.json": "./package.json",
-    "./*": "./*"
-  },
-  "scripts": {
-    "go_wasm": "cp $(tinygo env TINYGOROOT)/targets/wasm_exec.js ./go_wasm.js",
-    "patch": "git apply ./go_wasm.patch",
-    "build": "tinygo build -o=lib.wasm -target=wasm -no-debug -stack-size=24kb ./src/lib.go",
-    "postbuild": "npm run go_wasm && npm run patch",
-    "test": "node --test"
-  },
-  "engines": {
-    "node": ">=16.17.0"
-  },
-  "keywords": [
-    "wasm",
-    "golang",
-    "formatter"
-  ],
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  }
+    "engines": {
+        "node": ">=16.17.0"
+    },
+    "keywords": [
+        "wasm",
+        "golang",
+        "formatter"
+    ],
+    "license": "MIT",
+    "publishConfig": {
+        "access": "public",
+        "provenance": true
+    }
 }

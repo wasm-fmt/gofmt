@@ -4,8 +4,6 @@ on: [push, pull_request]
 
 jobs:
     build:
-        permissions:
-            packages: write
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
@@ -20,20 +18,3 @@ jobs:
 
             - run: npm run build
             - run: npm run test
-
-            - name: publish to npmjs
-              run: npm publish
-              if: startsWith(github.ref, 'refs/tags/v')
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-            - uses: actions/setup-node@v3
-              with:
-                  node-version-file: ".node-version"
-                  registry-url: "https://npm.pkg.github.com"
-
-            - name: publish to github packages
-              run: npm publish
-              if: startsWith(github.ref, 'refs/tags/v')
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
