@@ -13,7 +13,7 @@ export default async function init(wasm_url) {
     }
 
     if (typeof wasm_url === "string") {
-        wasm_url = new URL(wasm_url);
+        wasm_url = new URL(wasm_url, import.meta.url);
     }
 
     if (
