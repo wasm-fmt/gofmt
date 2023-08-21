@@ -6,7 +6,8 @@ on:
             - "v*"
 
 jobs:
-    build:
+    publish:
+        if: startsWith(github.ref, 'refs/tags/v')
         permissions:
             packages: write
             contents: write
