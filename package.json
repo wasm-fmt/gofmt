@@ -1,11 +1,26 @@
 {
     "name": "@wasm-fmt/gofmt",
+    "description": "A wasm based golang formatter",
     "author": "magic-akari <akari.ccino@gamil.com>",
     "version": "0.3.2",
-    "description": "wasm based gofmt",
-    "main": "lib.js",
-    "types": "lib.d.ts",
+    "license": "MIT",
+    "keywords": [
+        "wasm",
+        "golang",
+        "formatter"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/wasm-fmt/gofmt"
+    },
+    "homepage": "https://github.com/wasm-fmt/gofmt",
+    "bugs": {
+        "url": "https://github.com/wasm-fmt/gofmt/issues"
+    },
     "type": "module",
+    "main": "lib.js",
+    "module": "lib.js",
+    "types": "lib.d.ts",
     "exports": {
         ".": {
             "types": "./lib.d.ts",
@@ -28,12 +43,6 @@
     "engines": {
         "node": ">=16.17.0"
     },
-    "keywords": [
-        "wasm",
-        "golang",
-        "formatter"
-    ],
-    "license": "MIT",
     "publishConfig": {
         "access": "public",
         "provenance": true
