@@ -1,7 +1,7 @@
 import init from "./lib.js";
-import wasm from "./lib.wasm?url";
+import wasm_url from "./lib.wasm?url";
 
-export default function __wbg_init(input = wasm) {
+export default function (input = wasm_url) {
     return init(input);
 }
 
