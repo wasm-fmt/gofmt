@@ -66,7 +66,7 @@ async function load(module, importObject) {
 }
 
 export function format(input) {
-    const [err, result] = wasm.format(input);
+    const [err, result] = wasm.instance.format(input);
     if (err) {
         throw new Error(result);
     }
