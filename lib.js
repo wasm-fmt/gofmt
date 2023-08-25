@@ -1,44 +1,72 @@
 import { Go } from "./go_wasm.js";
 const go = new Go();
 
-let inst;
+let wasm;
 
-export default async function init(wasm_url) {
-    if (inst) {
-        return await inst;
+export default async function init(input) {
+    if (wasm) {
+        await wasm;
+        return;
     }
 
-    if (!wasm_url) {
-        wasm_url = new URL("lib.wasm", import.meta.url);
+    wasm = load(input, go.importObject);
+    wasm = await wasm;
+    go.run(wasm.instance);
+}
+
+async function load(module, importObject) {
+    switch (typeof module) {
+        case "undefined":
+            module = "lib.wasm";
+        case "string":
+            module = new URL(module, import.meta.url);
     }
 
-    if (typeof wasm_url === "string") {
-        wasm_url = new URL(wasm_url, import.meta.url);
+    if (module instanceof URL || module instanceof Request) {
+        if (
+            typeof __webpack_require__ !== "function" &&
+            module.protocol === "file:"
+        ) {
+            const fs = await import("node:fs/promises");
+            module = await fs.readFile(module);
+        } else {
+            module = await fetch(module);
+        }
     }
 
-    if (
-        typeof __webpack_require__ !== "function" &&
-        wasm_url.protocol === "file:"
-    ) {
-        inst = import("node:fs/promises")
-            .then((fs) => fs.readFile(wasm_url))
-            .then((bytes) => WebAssembly.instantiate(bytes, go.importObject));
-    } else if ("instantiateStreaming" in WebAssembly) {
-        inst = WebAssembly.instantiateStreaming(
-            fetch(wasm_url),
-            go.importObject
-        );
-    } else {
-        inst = fetch(wasm_url)
-            .then((response) => response.arrayBuffer())
-            .then((bytes) => WebAssembly.instantiate(bytes, go.importObject));
+    if (module instanceof Response) {
+        if ("instantiateStreaming" in WebAssembly) {
+            try {
+                return await WebAssembly.instantiateStreaming(
+                    module,
+                    importObject
+                );
+            } catch (e) {
+                if (module.headers.get("Content-Type") != "application/wasm") {
+                    console.warn(
+                        "`WebAssembly.instantiateStreaming` failed because your server does not serve wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n",
+                        e
+                    );
+                } else {
+                    throw e;
+                }
+            }
+        }
+
+        const bytes = await module.arrayBuffer();
+        return await WebAssembly.instantiate(bytes, importObject);
     }
-    inst = (await inst).instance;
-    go.run(inst);
+    const instance = await WebAssembly.instantiate(module, importObject);
+
+    if (instance instanceof WebAssembly.Instance) {
+        return { instance, module };
+    }
+
+    return instance;
 }
 
 export function format(input) {
-    const [err, result] = inst.format(input);
+    const [err, result] = wasm.format(input);
     if (err) {
         throw new Error(result);
     }
