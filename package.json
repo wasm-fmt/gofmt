@@ -2,7 +2,7 @@
     "name": "@wasm-fmt/gofmt",
     "description": "A wasm based golang formatter",
     "author": "magic-akari <akari.ccino@gamil.com>",
-    "version": "0.3.3",
+    "version": "0.4.0",
     "license": "MIT",
     "keywords": [
         "wasm",
