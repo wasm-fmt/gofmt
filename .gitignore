@@ -20,6 +20,6 @@
 # Go workspace file
 go.work
 
-lib.wasm
+gofmt.wasm
 *.tgz
-go_wasm.js
+gofmt.js

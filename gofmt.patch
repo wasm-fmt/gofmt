@@ -1,11 +1,12 @@
-diff --git a/go_wasm.js b/go_wasm.js
-index 8021b44..a4836ba 100644
---- a/go_wasm.js
-+++ b/go_wasm.js
-@@ -4,135 +4,10 @@
+diff --git a/gofmt.js b/gofmt.js
+index 8021b44..f7bfc3f 100644
+--- a/gofmt.js
++++ b/gofmt.js
+@@ -3,136 +3,10 @@
+ // license that can be found in the LICENSE file.
  //
  // This file has been modified for use by the TinyGo compiler.
- 
+-
 -(() => {
 -	// Map multiple JavaScript environments to a single common API,
 -	// preferring web standards over Node.js API.
@@ -135,11 +136,11 @@ index 8021b44..a4836ba 100644
 -	var logLine = [];
  
 -	global.Go = class {
-+	export class Go {
++	class Go {
  		constructor() {
  			this._callbackTimeouts = new Map();
  			this._nextCallbackTimeoutID = 1;
-@@ -249,50 +124,12 @@
+@@ -249,50 +123,12 @@
  			this.importObject = {
  				wasi_snapshot_preview1: {
  					// https://github.com/WebAssembly/WASI/blob/main/phases/snapshot/docs.md#fd_write
@@ -196,7 +197,7 @@ index 8021b44..a4836ba 100644
  				},
  				env: {
  					// func ticks() float64
-@@ -307,10 +144,15 @@
+@@ -307,10 +143,15 @@
  					},
  
  					// func finalizeRef(v ref)
@@ -216,7 +217,7 @@ index 8021b44..a4836ba 100644
  					},
  
  					// func stringVal(value string) ref
-@@ -464,7 +306,12 @@
+@@ -464,7 +305,12 @@
  				null,
  				true,
  				false,
@@ -230,7 +231,7 @@ index 8021b44..a4836ba 100644
  				this,
  			];
  			this._goRefCounts = []; // number of references that Go has to a JS value, indexed by reference id
-@@ -472,8 +319,6 @@
+@@ -472,8 +318,6 @@
  			this._idPool = [];      // unused ids that have been garbage collected
  			this.exited = false;    // whether the Go program has exited
  
@@ -239,7 +240,7 @@ index 8021b44..a4836ba 100644
  			while (true) {
  				const callbackPromise = new Promise((resolve) => {
  					this._resolveCallbackPromise = () => {
-@@ -511,25 +356,3 @@
+@@ -511,25 +355,72 @@
  			};
  		}
  	}
@@ -265,3 +266,72 @@ index 8021b44..a4836ba 100644
 -		});
 -	}
 -})();
++/**
++ * ================== End of wasm_exec.js ==================
++ */
++/**/let wasm;
++/**/export default async function init(input) {
++/**/	if (wasm) {
++/**/		await wasm;
++/**/		return;
++/**/	}
++/**/	const go = new Go();
++/**/	wasm = load(input, go.importObject);
++/**/	wasm = await wasm;
++/**/	go.run(wasm.instance);
++/**/}
++/**/
++/**/async function load(module, importObject) {
++/**/	switch (typeof module) {
++/**/		case "undefined":
++/**/			module = "gofmt.wasm";
++/**/		case "string":
++/**/			module = new URL(module, import.meta.url);
++/**/	}
++/**/	if (module instanceof URL || module instanceof Request) {
++/**/		if (
++/**/			typeof __webpack_require__ !== "function" &&
++/**/			module.protocol === "file:"
++/**/		) {
++/**/			const fs = await import("node:fs/promises");
++/**/			module = await fs.readFile(module);
++/**/		} else {
++/**/			module = await fetch(module);
++/**/		}
++/**/	}
++/**/	if (module instanceof Response) {
++/**/		if ("instantiateStreaming" in WebAssembly) {
++/**/			try {
++/**/				return await WebAssembly.instantiateStreaming(
++/**/					module,
++/**/					importObject
++/**/				);
++/**/			} catch (e) {
++/**/				if (module.headers.get("Content-Type") != "application/wasm") {
++/**/					console.warn(
++/**/						"`WebAssembly.instantiateStreaming` failed because your server does not serve wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n",
++/**/						e
++/**/					);
++/**/				} else {
++/**/					throw e;
++/**/				}
++/**/			}
++/**/		}
++/**/		const bytes = await module.arrayBuffer();
++/**/		return await WebAssembly.instantiate(bytes, importObject);
++/**/	}
++/**/	const instance = await WebAssembly.instantiate(module, importObject);
++/**/	if (instance instanceof WebAssembly.Instance) {
++/**/		return { instance, module };
++/**/	}
++/**/	return instance;
++/**/}
++/**/
++/**/export function format(input) {
++/**/	const [err, result] = wasm.instance.format(input);
++/**/	if (err) {
++/**/		throw new Error(result);
++/**/	}
++/**/	return result;
++/**/}
++/**/

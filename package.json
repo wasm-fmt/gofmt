@@ -1,50 +1,50 @@
 {
-    "name": "@wasm-fmt/gofmt",
-    "description": "A wasm based golang formatter",
-    "author": "magic-akari <akari.ccino@gamil.com>",
-    "version": "0.4.0",
-    "license": "MIT",
-    "keywords": [
-        "wasm",
-        "golang",
-        "formatter"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/wasm-fmt/gofmt"
-    },
-    "homepage": "https://github.com/wasm-fmt/gofmt",
-    "bugs": {
-        "url": "https://github.com/wasm-fmt/gofmt/issues"
-    },
-    "type": "module",
-    "main": "lib.js",
-    "module": "lib.js",
-    "types": "lib.d.ts",
-    "exports": {
-        ".": {
-            "types": "./lib.d.ts",
-            "default": "./lib.js"
-        },
-        "./vite": {
-            "types": "./lib.d.ts",
-            "default": "./vite.js"
-        },
-        "./package.json": "./package.json",
-        "./*": "./*"
-    },
-    "scripts": {
-        "go_wasm": "cp $(tinygo env TINYGOROOT)/targets/wasm_exec.js ./go_wasm.js",
-        "patch": "git apply ./go_wasm.patch",
-        "build": "tinygo build -o=lib.wasm -target=wasm -no-debug -stack-size=24kb ./src/lib.go",
-        "postbuild": "npm run go_wasm && npm run patch",
-        "test": "node --test"
-    },
-    "engines": {
-        "node": ">=16.17.0"
-    },
-    "publishConfig": {
-        "access": "public",
-        "provenance": true
-    }
+	"name": "@wasm-fmt/gofmt",
+	"description": "A wasm based golang formatter",
+	"author": "magic-akari <akari.ccino@gamil.com>",
+	"version": "0.4.0",
+	"license": "MIT",
+	"keywords": [
+		"wasm",
+		"golang",
+		"formatter"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/wasm-fmt/gofmt"
+	},
+	"homepage": "https://github.com/wasm-fmt/gofmt",
+	"bugs": {
+		"url": "https://github.com/wasm-fmt/gofmt/issues"
+	},
+	"type": "module",
+	"main": "gofmt.js",
+	"module": "gofmt.js",
+	"types": "gofmt.d.ts",
+	"exports": {
+		".": {
+			"types": "./gofmt.d.ts",
+			"default": "./gofmt.js"
+		},
+		"./vite": {
+			"types": "./gofmt.d.ts",
+			"default": "./vite.js"
+		},
+		"./package.json": "./package.json",
+		"./*": "./*"
+	},
+	"scripts": {
+		"gofmt": "cp $(tinygo env TINYGOROOT)/targets/wasm_exec.js ./gofmt.js",
+		"patch": "git apply ./gofmt.patch",
+		"build": "tinygo build -o=gofmt.wasm -target=wasm -no-debug -stack-size=24kb ./src/lib.go",
+		"postbuild": "npm run gofmt && npm run patch",
+		"test": "node --test"
+	},
+	"engines": {
+		"node": ">=16.17.0"
+	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	}
 }

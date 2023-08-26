@@ -1,8 +1,8 @@
-import init from "./lib.js";
-import wasm_url from "./lib.wasm?url";
+import init from "./gofmt.js";
+import wasm_url from "./gofmt.wasm?url";
 
 export default function (input = wasm_url) {
-    return init(input);
+	return init(input);
 }
 
-export * from "./lib.js";
+export * from "./gofmt.js";
