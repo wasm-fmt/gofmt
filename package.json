@@ -42,7 +42,6 @@
 		"test:deno": "deno test test_deno --allow-read",
 		"test:bun": "bun test test_bun"
 	},
-	"packageManager": "pnpm@8.7.1",
 	"engines": {
 		"node": ">=16.17.0"
 	},
