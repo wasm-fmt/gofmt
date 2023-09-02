@@ -1,4 +1,4 @@
-[![Build](https://github.com/wasm-fmt/gofmt/actions/workflows/build.yml/badge.svg)](https://github.com/wasm-fmt/gofmt/actions/workflows/build.yml)
+[![Test](https://github.com/wasm-fmt/gofmt/actions/workflows/test.yml/badge.svg)](https://github.com/wasm-fmt/gofmt/actions/workflows/test.yml)
 [![npm](https://img.shields.io/npm/v/@wasm-fmt/gofmt)](https://www.npmjs.com/package/@wasm-fmt/gofmt)
 
 # Install
@@ -40,8 +40,8 @@ git clone https://github.com/wasm-fmt/gofmt.git
 # 2. install TinyGo https://tinygo.org/getting-started/install/
 
 # 3. build
-npm run build
+pnpm build
 
 # 4. test
-npm run test
+pnpm run /^test:/
 ```
