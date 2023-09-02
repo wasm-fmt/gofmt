@@ -8,13 +8,20 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
+              name: Install Node
               with:
                   node-version-file: ".node-version"
 
             - uses: pnpm/action-setup@v2
               name: Install pnpm
 
+            - uses: denoland/setup-deno@v1
+              name: Install Deno
+              with:
+                  deno-version: v1.x
+
             - uses: oven-sh/setup-bun@v1
+              name: Install bun
 
             - run: |
                   wget -P ${{ runner.temp }} https://github.com/tinygo-org/tinygo/releases/download/v0.28.1/tinygo_0.28.1_amd64.deb
