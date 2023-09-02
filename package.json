@@ -38,13 +38,13 @@
 		"patch": "git apply ./gofmt.patch",
 		"build": "tinygo build -o=gofmt.wasm -target=wasm -no-debug -stack-size=24kb ./src/lib.go",
 		"postbuild": "npm run gofmt && npm run patch",
-		"test": "node --test"
+		"test:node": "node --test",
+		"test:deno": "deno test --allow-read"
 	},
 	"engines": {
 		"node": ">=16.17.0"
 	},
 	"publishConfig": {
-		"access": "public",
-		"provenance": true
+		"access": "public"
 	}
 }

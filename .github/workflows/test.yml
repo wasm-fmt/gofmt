@@ -1,20 +1,28 @@
-name: Build
+name: Test
 
 on: [push, pull_request]
 
 jobs:
-    build:
+    test:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
               with:
                   node-version-file: ".node-version"
-                  registry-url: "https://registry.npmjs.org"
 
             - run: |
                   wget -P ${{ runner.temp }} https://github.com/tinygo-org/tinygo/releases/download/v0.28.1/tinygo_0.28.1_amd64.deb
                   yes | sudo dpkg -i ${{ runner.temp }}/tinygo_0.28.1_amd64.deb
 
             - run: npm run build
-            - run: npm run test
+            - run: pnpm run /test/
+
+            - name: Package
+              run: npm pack
+
+            - name: Upload
+              uses: actions/upload-artifact@v3
+              with:
+                  path: |
+                      wasm-fmt-*.tgz

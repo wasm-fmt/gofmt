@@ -27,7 +27,7 @@ jobs:
             - run: npm run build
 
             - name: Publish to npmjs
-              run: npm publish
+              run: npm publish --provenance
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -48,4 +48,4 @@ jobs:
               uses: softprops/action-gh-release@c9b46fe7aad9f02afd89b12450b780f52dacfb2d
               with:
                   files: |
-                      *.tgz
+                      wasm-fmt-*.tgz
