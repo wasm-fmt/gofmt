@@ -38,9 +38,11 @@
 		"patch": "git apply ./gofmt.patch",
 		"build": "tinygo build -o=gofmt.wasm -target=wasm -no-debug -stack-size=24kb ./src/lib.go",
 		"postbuild": "npm run gofmt && npm run patch",
-		"test:node": "node --test",
-		"test:deno": "deno test --allow-read"
+		"test:node": "node --test test_node",
+		"test:deno": "deno test test_deno --allow-read",
+		"test:bun": "bun test test_bun"
 	},
+	"packageManager": "pnpm@8.7.1",
 	"engines": {
 		"node": ">=16.17.0"
 	},
