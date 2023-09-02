@@ -1,5 +1,7 @@
-.github
-.vscode
-testdata
+test_*
+src
+node_modules
 *.tgz
+*.sh
 *.patch
+.*

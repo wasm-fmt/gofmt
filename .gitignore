@@ -23,3 +23,5 @@ go.work
 gofmt.wasm
 *.tgz
 gofmt.js
+
+node_modules
