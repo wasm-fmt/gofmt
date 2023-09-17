@@ -1,8 +1,8 @@
 diff --git a/gofmt.js b/gofmt.js
-index 8021b44..f7bfc3f 100644
+index 5dfc67c..5965b09 100644
 --- a/gofmt.js
 +++ b/gofmt.js
-@@ -3,136 +3,10 @@
+@@ -3,137 +3,12 @@
  // license that can be found in the LICENSE file.
  //
  // This file has been modified for use by the TinyGo compiler.
@@ -133,14 +133,15 @@ index 8021b44..f7bfc3f 100644
 -
  	const encoder = new TextEncoder("utf-8");
  	const decoder = new TextDecoder("utf-8");
--	var logLine = [];
+ 	let reinterpretBuf = new DataView(new ArrayBuffer(8));
+ 	var logLine = [];
  
 -	global.Go = class {
 +	class Go {
  		constructor() {
  			this._callbackTimeouts = new Map();
  			this._nextCallbackTimeoutID = 1;
-@@ -249,50 +123,12 @@
+@@ -239,50 +114,7 @@
  			this.importObject = {
  				wasi_snapshot_preview1: {
  					// https://github.com/WebAssembly/WASI/blob/main/phases/snapshot/docs.md#fd_write
@@ -189,24 +190,30 @@ index 8021b44..f7bfc3f 100644
 -						return 0;
 -					},
 +					fd_write() {},
-+					fd_close() {},
-+					fd_fdstat_get() {},
-+					fd_seek() {},
-+					proc_exit() {},
-+					random_get() {}
  				},
- 				env: {
+ 				gojs: {
  					// func ticks() float64
-@@ -307,10 +143,15 @@
+@@ -290,17 +122,21 @@
+ 						return timeOrigin + performance.now();
  					},
  
+-					// func sleepTicks(timeout float64)
+-					"runtime.sleepTicks": (timeout) => {
+-						// Do not sleep, only reactivate scheduler after the given timeout.
+-						setTimeout(this._inst.exports.go_scheduler, timeout);
+-					},
+-
  					// func finalizeRef(v ref)
--					"syscall/js.finalizeRef": (sp) => {
+ 					"syscall/js.finalizeRef": (v_ref) => {
 -						// Note: TinyGo does not support finalizers so this should never be
 -						// called.
 -						console.error('syscall/js.finalizeRef not implemented');
-+					"syscall/js.finalizeRef": (v_addr) => {
-+						const id = mem().getUint32(v_addr, true);
++						reinterpretBuf.setBigInt64(0, v_ref, true);
++						const f = reinterpretBuf.getFloat64(0, true);
++						if (f === 0 || !isNaN(f)) {
++							return;
++						}
++						const id = v_ref & 0xffffffffn;
 +						this._goRefCounts[id]--;
 +						if (this._goRefCounts[id] === 0) {
 +							const v = this._values[id];
@@ -217,7 +224,89 @@ index 8021b44..f7bfc3f 100644
  					},
  
  					// func stringVal(value string) ref
-@@ -464,7 +305,12 @@
+@@ -325,13 +161,6 @@
+ 						Reflect.set(v, p, x);
+ 					},
+ 
+-					// func valueDelete(v ref, p string)
+-					"syscall/js.valueDelete": (v_ref, p_ptr, p_len) => {
+-						const v = unboxValue(v_ref);
+-						const p = loadString(p_ptr, p_len);
+-						Reflect.deleteProperty(v, p);
+-					},
+-
+ 					// func valueIndex(v ref, i int) ref
+ 					"syscall/js.valueIndex": (v_ref, i) => {
+ 						return boxValue(Reflect.get(unboxValue(v_ref), i));
+@@ -357,19 +186,6 @@
+ 						}
+ 					},
+ 
+-					// func valueInvoke(v ref, args []ref) (ref, bool)
+-					"syscall/js.valueInvoke": (ret_addr, v_ref, args_ptr, args_len, args_cap) => {
+-						try {
+-							const v = unboxValue(v_ref);
+-							const args = loadSliceOfValues(args_ptr, args_len, args_cap);
+-							storeValue(ret_addr, Reflect.apply(v, undefined, args));
+-							mem().setUint8(ret_addr + 8, 1);
+-						} catch (err) {
+-							storeValue(ret_addr, err);
+-							mem().setUint8(ret_addr + 8, 0);
+-						}
+-					},
+-
+ 					// func valueNew(v ref, args []ref) (ref, bool)
+ 					"syscall/js.valueNew": (ret_addr, v_ref, args_ptr, args_len, args_cap) => {
+ 						const v = unboxValue(v_ref);
+@@ -401,47 +217,6 @@
+ 						const str = unboxValue(v_ref);
+ 						loadSlice(slice_ptr, slice_len, slice_cap).set(str);
+ 					},
+-
+-					// func valueInstanceOf(v ref, t ref) bool
+-					"syscall/js.valueInstanceOf": (v_ref, t_ref) => {
+- 						return unboxValue(v_ref) instanceof unboxValue(t_ref);
+-					},
+-
+-					// func copyBytesToGo(dst []byte, src ref) (int, bool)
+-					"syscall/js.copyBytesToGo": (ret_addr, dest_addr, dest_len, dest_cap, src_ref) => {
+-						let num_bytes_copied_addr = ret_addr;
+-						let returned_status_addr = ret_addr + 4; // Address of returned boolean status variable
+-
+-						const dst = loadSlice(dest_addr, dest_len);
+-						const src = unboxValue(src_ref);
+-						if (!(src instanceof Uint8Array || src instanceof Uint8ClampedArray)) {
+-							mem().setUint8(returned_status_addr, 0); // Return "not ok" status
+-							return;
+-						}
+-						const toCopy = src.subarray(0, dst.length);
+-						dst.set(toCopy);
+-						mem().setUint32(num_bytes_copied_addr, toCopy.length, true);
+-						mem().setUint8(returned_status_addr, 1); // Return "ok" status
+-					},
+-
+-					// copyBytesToJS(dst ref, src []byte) (int, bool)
+-					// Originally copied from upstream Go project, then modified:
+-					//   https://github.com/golang/go/blob/3f995c3f3b43033013013e6c7ccc93a9b1411ca9/misc/wasm/wasm_exec.js#L404-L416
+-					"syscall/js.copyBytesToJS": (ret_addr, dst_ref, src_addr, src_len, src_cap) => {
+-						let num_bytes_copied_addr = ret_addr;
+-						let returned_status_addr = ret_addr + 4; // Address of returned boolean status variable
+-
+-						const dst = unboxValue(dst_ref);
+-						const src = loadSlice(src_addr, src_len);
+-						if (!(dst instanceof Uint8Array || dst instanceof Uint8ClampedArray)) {
+-							mem().setUint8(returned_status_addr, 0); // Return "not ok" status
+-							return;
+-						}
+-						const toCopy = src.subarray(0, dst.length);
+-						dst.set(toCopy);
+-						mem().setUint32(num_bytes_copied_addr, toCopy.length, true);
+-						mem().setUint8(returned_status_addr, 1); // Return "ok" status
+-					},
+ 				}
+ 			};
+ 
+@@ -458,7 +233,12 @@
  				null,
  				true,
  				false,
@@ -231,7 +320,7 @@ index 8021b44..f7bfc3f 100644
  				this,
  			];
  			this._goRefCounts = []; // number of references that Go has to a JS value, indexed by reference id
-@@ -472,8 +318,6 @@
+@@ -466,8 +246,6 @@
  			this._idPool = [];      // unused ids that have been garbage collected
  			this.exited = false;    // whether the Go program has exited
  
@@ -240,7 +329,7 @@ index 8021b44..f7bfc3f 100644
  			while (true) {
  				const callbackPromise = new Promise((resolve) => {
  					this._resolveCallbackPromise = () => {
-@@ -511,25 +355,72 @@
+@@ -505,25 +283,72 @@
  			};
  		}
  	}

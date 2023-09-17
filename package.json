@@ -34,10 +34,7 @@
 		"./*": "./*"
 	},
 	"scripts": {
-		"gofmt": "cp $(tinygo env TINYGOROOT)/targets/wasm_exec.js ./gofmt.js",
-		"patch": "git apply ./gofmt.patch",
-		"build": "tinygo build -o=gofmt.wasm -target=wasm -no-debug -stack-size=24kb ./src/lib.go",
-		"postbuild": "npm run gofmt && npm run patch",
+		"build": "./scripts/build.sh",
 		"test:node": "node --test test_node",
 		"test:deno": "deno test test_deno --allow-read",
 		"test:bun": "bun test test_bun"

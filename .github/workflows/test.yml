@@ -13,9 +13,13 @@ jobs:
                   node-version-file: ".node-version"
 
             - run: |
-                  wget -P ${{ runner.temp }} https://github.com/tinygo-org/tinygo/releases/download/v0.28.1/tinygo_0.28.1_amd64.deb
-                  yes | sudo dpkg -i ${{ runner.temp }}/tinygo_0.28.1_amd64.deb
-            - run: npm run build
+                  wget -P ${{ runner.temp }} https://github.com/tinygo-org/tinygo/releases/download/v0.29.0/tinygo_0.29.0_amd64.deb
+                  yes | sudo dpkg -i ${{ runner.temp }}/tinygo_0.29.0_amd64.deb
+
+            - name: Build
+              run: scripts/build.sh
+              shell: bash
+
             - run: npm pack
             - name: Upload
               uses: actions/upload-artifact@v3
