@@ -2,10 +2,20 @@ set -Eeo pipefail
 
 echo "Building..."
 tinygo build -o=gofmt.wasm -target=wasm -no-debug -stack-size=24kb ./src/lib.go
+
 if [[ ! -z "${WASM_OPT}" ]]; then
 	echo "Optimizing..."
-	wasm-opt gofmt.wasm -Os -o gofmt.opt.wasm
-	mv gofmt.opt.wasm gofmt.wasm
+
+	tmp_dir=$(mktemp -d)
+	cp gofmt.wasm $tmp_dir/gofmt.wasm
+
+	wasm-opt gofmt.wasm -Os -o $tmp_dir/gofmt_os.wasm
+	wasm-opt gofmt.wasm -Oz -o $tmp_dir/gofmt_oz.wasm
+
+	smallest_wasm=$(ls -Sr $tmp_dir/*.wasm | head -1)
+
+	mv $smallest_wasm gofmt.wasm
+	rm -rf $tmp_dir
 fi
 
 echo "Generating JS..."
