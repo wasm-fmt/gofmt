@@ -1,5 +1,5 @@
 diff --git a/gofmt.js b/gofmt.js
-index 5dfc67c..5965b09 100644
+index 5dfc67c..1b6e301 100644
 --- a/gofmt.js
 +++ b/gofmt.js
 @@ -3,137 +3,12 @@
@@ -388,7 +388,7 @@ index 5dfc67c..5965b09 100644
 +/**/			module = await fetch(module);
 +/**/		}
 +/**/	}
-+/**/	if (module instanceof Response) {
++/**/	if (typeof Response === 'function' && module instanceof Response) {
 +/**/		if ("instantiateStreaming" in WebAssembly) {
 +/**/			try {
 +/**/				return await WebAssembly.instantiateStreaming(
