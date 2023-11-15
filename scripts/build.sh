@@ -1,7 +1,7 @@
 set -Eeo pipefail
 
 echo "Building..."
-tinygo build -o=gofmt.wasm -target=wasm -no-debug -stack-size=24kb ./src/lib.go
+tinygo build -o=gofmt.wasm -target=wasm -no-debug -stack-size=64kb ./src/lib.go
 
 if [[ ! -z "${WASM_OPT}" ]]; then
 	echo "Optimizing..."
