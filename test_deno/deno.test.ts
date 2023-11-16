@@ -17,11 +17,11 @@ for await (const entry of walk(test_root, {
 	const expect_path = entry.path.replace(/input$/, "golden");
 	const input = Deno.readTextFileSync(entry.path);
 
-	const actual = format(input);
-
 	if (update) {
+		const actual = format(input);
 		Deno.writeTextFileSync(expect_path, actual);
 	} else {
+		const actual = format(input);
 		const expected = Deno.readTextFileSync(expect_path);
 
 		const test_name = relative(test_root.pathname, entry.path);
