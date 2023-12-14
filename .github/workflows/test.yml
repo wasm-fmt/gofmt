@@ -40,7 +40,7 @@ jobs:
         needs: build
         steps:
             - uses: actions/checkout@v4
-            - uses: actions/download-artifact@v3
+            - uses: actions/download-artifact@v4
               with:
                   name: build
                   path: ./
@@ -57,7 +57,7 @@ jobs:
         needs: build
         steps:
             - uses: actions/checkout@v4
-            - uses: actions/download-artifact@v3
+            - uses: actions/download-artifact@v4
               with:
                   name: build
                   path: ./
@@ -74,7 +74,7 @@ jobs:
         needs: build
         steps:
             - uses: actions/checkout@v4
-            - uses: actions/download-artifact@v3
+            - uses: actions/download-artifact@v4
               with:
                   name: build
                   path: ./
