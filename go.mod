@@ -1,3 +1,3 @@
 module github.com/wasm-fmt/gofmt
 
-go 1.20
+go 1.21
