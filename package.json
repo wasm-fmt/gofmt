@@ -24,11 +24,12 @@
 	"exports": {
 		".": {
 			"types": "./gofmt.d.ts",
+			"node": "./gofmt_node.js",
 			"default": "./gofmt.js"
 		},
 		"./vite": {
 			"types": "./gofmt.d.ts",
-			"default": "./vite.js"
+			"default": "./gofmt_vite.js"
 		},
 		"./package.json": "./package.json",
 		"./*": "./*"

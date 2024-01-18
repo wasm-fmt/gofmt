@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import init, { format } from "../gofmt.js";
+import init, { format } from "..";
 import fs from "node:fs/promises";
 import path from "node:path";
 

@@ -1,4 +1,4 @@
-import init, { format } from "../gofmt.js";
+import init, { format } from "../gofmt_node.js";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
