@@ -57,3 +57,4 @@ jobs:
               with:
                   files: |
                       wasm-fmt-*.tgz
+                      gofmt.wasm
