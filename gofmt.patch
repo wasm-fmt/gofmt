@@ -1,12 +1,11 @@
 diff --git a/gofmt.js b/gofmt.js
-index 5dfc67c..96e8a3f 100644
+index a7f8c31..dcb950c 100644
 --- a/gofmt.js
 +++ b/gofmt.js
-@@ -3,137 +3,12 @@
- // license that can be found in the LICENSE file.
+@@ -4,136 +4,12 @@
  //
  // This file has been modified for use by the TinyGo compiler.
--
+
 -(() => {
 -	// Map multiple JavaScript environments to a single common API,
 -	// preferring web standards over Node.js API.
@@ -135,13 +134,13 @@ index 5dfc67c..96e8a3f 100644
  	const decoder = new TextDecoder("utf-8");
  	let reinterpretBuf = new DataView(new ArrayBuffer(8));
  	var logLine = [];
- 
+
 -	global.Go = class {
 +	class Go {
  		constructor() {
  			this._callbackTimeouts = new Map();
  			this._nextCallbackTimeoutID = 1;
-@@ -239,50 +114,7 @@
+@@ -239,50 +115,7 @@
  			this.importObject = {
  				wasi_snapshot_preview1: {
  					// https://github.com/WebAssembly/WASI/blob/main/phases/snapshot/docs.md#fd_write
@@ -189,14 +188,14 @@ index 5dfc67c..96e8a3f 100644
 -						crypto.getRandomValues(loadSlice(bufPtr, bufLen));
 -						return 0;
 -					},
-+					fd_write() {},
++					fd_write: () => 0,      // dummy
  				},
  				gojs: {
  					// func ticks() float64
-@@ -290,17 +122,21 @@
+@@ -290,17 +123,21 @@
  						return timeOrigin + performance.now();
  					},
- 
+
 -					// func sleepTicks(timeout float64)
 -					"runtime.sleepTicks": (timeout) => {
 -						// Do not sleep, only reactivate scheduler after the given timeout.
@@ -222,12 +221,12 @@ index 5dfc67c..96e8a3f 100644
 +							this._idPool.push(id);
 +						}
  					},
- 
+
  					// func stringVal(value string) ref
-@@ -325,13 +161,6 @@
+@@ -325,13 +162,6 @@
  						Reflect.set(v, p, x);
  					},
- 
+
 -					// func valueDelete(v ref, p string)
 -					"syscall/js.valueDelete": (v_ref, p_ptr, p_len) => {
 -						const v = unboxValue(v_ref);
@@ -238,10 +237,10 @@ index 5dfc67c..96e8a3f 100644
  					// func valueIndex(v ref, i int) ref
  					"syscall/js.valueIndex": (v_ref, i) => {
  						return boxValue(Reflect.get(unboxValue(v_ref), i));
-@@ -357,19 +186,6 @@
+@@ -357,19 +187,6 @@
  						}
  					},
- 
+
 -					// func valueInvoke(v ref, args []ref) (ref, bool)
 -					"syscall/js.valueInvoke": (ret_addr, v_ref, args_ptr, args_len, args_cap) => {
 -						try {
@@ -258,7 +257,7 @@ index 5dfc67c..96e8a3f 100644
  					// func valueNew(v ref, args []ref) (ref, bool)
  					"syscall/js.valueNew": (ret_addr, v_ref, args_ptr, args_len, args_cap) => {
  						const v = unboxValue(v_ref);
-@@ -401,47 +217,6 @@
+@@ -401,47 +218,6 @@
  						const str = unboxValue(v_ref);
  						loadSlice(slice_ptr, slice_len, slice_cap).set(str);
  					},
@@ -305,8 +304,8 @@ index 5dfc67c..96e8a3f 100644
 -					},
  				}
  			};
- 
-@@ -458,7 +233,12 @@
+
+@@ -458,7 +234,12 @@
  				null,
  				true,
  				false,
@@ -320,20 +319,10 @@ index 5dfc67c..96e8a3f 100644
  				this,
  			];
  			this._goRefCounts = []; // number of references that Go has to a JS value, indexed by reference id
-@@ -466,8 +246,6 @@
- 			this._idPool = [];      // unused ids that have been garbage collected
- 			this.exited = false;    // whether the Go program has exited
- 
--			const mem = new DataView(this._inst.exports.memory.buffer)
--
- 			while (true) {
- 				const callbackPromise = new Promise((resolve) => {
- 					this._resolveCallbackPromise = () => {
-@@ -505,25 +283,71 @@
- 			};
+@@ -504,24 +285,71 @@
  		}
  	}
--
+
 -	if (
 -		global.require &&
 -		global.require.main === module &&

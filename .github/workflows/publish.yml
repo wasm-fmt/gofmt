@@ -21,18 +21,12 @@ jobs:
                   registry-url: "https://registry.npmjs.org"
 
             - run: |
-                  wget -P ${{ runner.temp }} https://github.com/tinygo-org/tinygo/releases/download/v0.30.0/tinygo_0.30.0_amd64.deb
-                  yes | sudo dpkg -i ${{ runner.temp }}/tinygo_0.30.0_amd64.deb
-
-            - name: Install wasm-opt
-              run: |
-                  npm install -g binaryen
+                  wget -P ${{ runner.temp }} https://github.com/tinygo-org/tinygo/releases/download/v0.31.1/tinygo_0.31.1_amd64.deb
+                  yes | sudo dpkg -i ${{ runner.temp }}/tinygo_0.31.1_amd64.deb
 
             - name: Build
               run: scripts/build.sh
               shell: bash
-              env:
-                  WASM_OPT: 1
 
             - name: Publish to npmjs
               run: npm publish --provenance
