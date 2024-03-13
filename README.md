@@ -1,16 +1,23 @@
 [![Test](https://github.com/wasm-fmt/gofmt/actions/workflows/test.yml/badge.svg)](https://github.com/wasm-fmt/gofmt/actions/workflows/test.yml)
-[![npm](https://img.shields.io/npm/v/@wasm-fmt/gofmt)](https://www.npmjs.com/package/@wasm-fmt/gofmt)
 
 # Install
+
+[![npm](https://img.shields.io/npm/v/@wasm-fmt/gofmt)](https://www.npmjs.com/package/@wasm-fmt/gofmt)
 
 ```bash
 npm install @wasm-fmt/gofmt
 ```
 
+[![jsr.io](https://jsr.io/badges/@fmt/gofmt)](https://jsr.io/@fmt/gofmt)
+
+```bash
+npx jsr add @fmt/gofmt
+```
+
 # Usage
 
 ```JavaScript
-import init, { format } from '@wasm-fmt/gofmt';
+import init, { format } from "@wasm-fmt/gofmt";
 
 await init();
 
@@ -28,7 +35,7 @@ console.log(formatted);
 Vite users tip:
 
 ```JavaScript
-import init, { format } from '@wasm-fmt/gofmt/vite';
+import init, { format } from "@wasm-fmt/gofmt/vite";
 ```
 
 # Build from source
