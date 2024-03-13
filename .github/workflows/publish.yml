@@ -33,6 +33,9 @@ jobs:
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+            - name: Publish to jsr
+              run: npx jsr publish
+
             - uses: actions/setup-node@v4
               with:
                   node-version-file: ".node-version"
