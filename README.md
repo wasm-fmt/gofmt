@@ -2,13 +2,13 @@
 
 # Install
 
-[![npm](https://img.shields.io/npm/v/@wasm-fmt/gofmt)](https://www.npmjs.com/package/@wasm-fmt/gofmt)
+[![npm](https://img.shields.io/npm/v/@wasm-fmt/gofmt?color=00ADD8)](https://www.npmjs.com/package/@wasm-fmt/gofmt)
 
 ```bash
 npm install @wasm-fmt/gofmt
 ```
 
-[![jsr.io](https://jsr.io/badges/@fmt/gofmt)](https://jsr.io/@fmt/gofmt)
+[![jsr.io](https://jsr.io/badges/@fmt/gofmt?color=00ADD8)](https://jsr.io/@fmt/gofmt)
 
 ```bash
 npx jsr add @fmt/gofmt
