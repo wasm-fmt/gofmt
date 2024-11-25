@@ -36,7 +36,7 @@
 	},
 	"scripts": {
 		"build": "./scripts/build.sh",
-		"test:node": "node --test test_node",
+		"test:node": "node --test test_node/node.test.js",
 		"test:deno": "deno test test_deno --allow-read",
 		"test:bun": "bun test test_bun"
 	},

@@ -67,7 +67,7 @@ jobs:
               with:
                   node-version-file: ".node-version"
 
-            - run: node --test test_node
+            - run: node --test test_node/node.test.js
 
     bun-test:
         runs-on: ubuntu-latest
