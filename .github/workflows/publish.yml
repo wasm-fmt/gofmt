@@ -15,7 +15,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - uses: actions/setup-node@v4
+            - uses: actions/setup-node@v5
               with:
                   node-version-file: ".node-version"
                   registry-url: "https://registry.npmjs.org"
@@ -36,7 +36,7 @@ jobs:
             - name: Publish to jsr
               run: npx jsr publish
 
-            - uses: actions/setup-node@v4
+            - uses: actions/setup-node@v5
               with:
                   node-version-file: ".node-version"
                   registry-url: "https://npm.pkg.github.com"
