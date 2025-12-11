@@ -17,9 +17,11 @@ jobs:
               with:
                   node-version-file: ".node-version"
 
+            - run: npm ci
+
             - run: |
-                  wget -P ${{ runner.temp }} https://github.com/tinygo-org/tinygo/releases/download/v0.34.0/tinygo_0.34.0_amd64.deb
-                  yes | sudo dpkg -i ${{ runner.temp }}/tinygo_0.34.0_amd64.deb
+                  wget -P ${{ runner.temp }} https://github.com/tinygo-org/tinygo/releases/download/v0.39.0/tinygo_0.39.0_amd64.deb
+                  yes | sudo dpkg -i ${{ runner.temp }}/tinygo_0.39.0_amd64.deb
 
             - name: Build
               run: scripts/build.sh
