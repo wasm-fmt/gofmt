@@ -41,14 +41,19 @@ import init, { format } from "@wasm-fmt/gofmt/vite";
 # Build from source
 
 ```bash
-# 1. clone this repo
-git clone https://github.com/wasm-fmt/gofmt.git
+# 1. install Go https://go.dev/doc/install
 
 # 2. install TinyGo https://tinygo.org/getting-started/install/
 
-# 3. build
-npm build
+# 3. clone this repo
+git clone https://github.com/wasm-fmt/gofmt.git
 
-# 4. test
+# 4. install dependencies inside the repo
+npm install
+
+# 5. build
+npm run build
+
+# 6. test
 npm run /^test:/
 ```
