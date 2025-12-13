@@ -12,7 +12,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v6
-            - uses: actions/setup-node@v4
+            - uses: actions/setup-node@v6
               name: Install Node
               with:
                   node-version-file: ".node-version"
@@ -64,7 +64,7 @@ jobs:
                   name: build
                   path: ./
 
-            - uses: actions/setup-node@v4
+            - uses: actions/setup-node@v6
               name: Install Node
               with:
                   node-version-file: ".node-version"
