@@ -47,6 +47,6 @@
 		"access": "public"
 	},
 	"devDependencies": {
-		"@ast-grep/napi": "0.40.2"
+		"@ast-grep/napi": "0.40.3"
 	}
 }
