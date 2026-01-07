@@ -1,49 +1,6 @@
 /* @ts-self-types="./gofmt_entry.d.ts" */
 import { format as _format } from "./gofmt.js";
-
 let wasm, wasmModule;
-
-export function initSync(buffer_or_module) {
-	if (wasm !== void 0) return wasm;
-
-	if (!(buffer_or_module instanceof WebAssembly.Module)) {
-		buffer_or_module = new WebAssembly.Module(buffer_or_module);
-	}
-
-	return finalize_init(
-		new WebAssembly.Instance(buffer_or_module),
-		buffer_or_module,
-	);
-}
-
-export default async function initAsync(init_input) {
-	if (wasm !== void 0) return wasm;
-
-	if (init_input === void 0) {
-		init_input = new URL("gofmt.wasm", import.meta.url);
-	}
-
-	if (typeof init_input === "string") {
-		init_input = new URL(init_input);
-	}
-
-	if (init_input instanceof URL && init_input.protocol === "file:") {
-		const [{ readFile }, { fileURLToPath }] = await Promise.all([
-			import("fs/promises"),
-			import("url"),
-		]);
-		init_input = readFile(fileURLToPath(init_input));
-	} else if (
-		(typeof Request === "function" && init_input instanceof Request) ||
-		init_input instanceof URL
-	) {
-		init_input = fetch(init_input);
-	}
-
-	const { instance, module } = await load(await init_input);
-
-	return finalize_init(instance, module);
-}
 
 async function load(module, imports) {
 	if (typeof Response === "function" && module instanceof Response) {
@@ -95,6 +52,36 @@ function finalize_init(instance, module) {
 	wasm = instance.exports, wasmModule = module;
 	wasm._initialize();
 	return wasm;
+}
+
+export function initSync(module) {
+	if (wasm !== void 0) return wasm;
+
+	if (!(module instanceof WebAssembly.Module)) {
+		module = new WebAssembly.Module(module);
+	}
+	const instance = new WebAssembly.Instance(module);
+	return finalize_init(instance, module);
+}
+
+export default async function initAsync(module_or_path) {
+	if (wasm !== void 0) return wasm;
+
+	if (module_or_path === void 0) {
+		module_or_path = new URL("gofmt.wasm", import.meta.url);
+	}
+
+	if (
+		typeof module_or_path === "string" ||
+		(typeof Request === "function" && module_or_path instanceof Request) ||
+		(typeof URL === "function" && module_or_path instanceof URL)
+	) {
+		module_or_path = fetch(module_or_path);
+	}
+
+	const { instance, module } = await load(await module_or_path);
+
+	return finalize_init(instance, module);
 }
 
 export function format(source) {

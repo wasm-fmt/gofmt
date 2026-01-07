@@ -11,13 +11,15 @@ const pkg_json = JSON.parse(pkg_text);
 
 const jsr_path = path.resolve(pkg_path, "..", "jsr.jsonc");
 pkg_json.name = "@fmt/gofmt";
-pkg_json.exports = "./gofmt.js";
+pkg_json.exports = "./gofmt_web.js";
 pkg_json.exclude = [
 	"!**",
 	"test_*",
 	"src",
 	"scripts",
 	"node_modules",
+	"jsconfig.json",
+	"tsconfig.json",
 	"*.tgz",
 	"*.sh",
 	"*.patch",

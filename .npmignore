@@ -3,6 +3,8 @@ src
 scripts
 node_modules
 jsr.jsonc
+jsconfig.json
+tsconfig.json
 *.tgz
 *.sh
 *.patch

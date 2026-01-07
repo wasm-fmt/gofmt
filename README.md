@@ -48,12 +48,9 @@ import init, { format } from "@wasm-fmt/gofmt/vite";
 # 3. clone this repo
 git clone https://github.com/wasm-fmt/gofmt.git
 
-# 4. install dependencies inside the repo
-npm install
+# 4. build
+pnpm build
 
-# 5. build
-npm run build
-
-# 6. test
-npm run /^test:/
+# 5. test
+pnpm run /^test:/
 ```

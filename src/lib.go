@@ -1,23 +1,60 @@
+//go:build tinygo
+
 package main
 
 import (
-	"go/format"
-	"syscall/js"
+	"bytes"
+	"unsafe"
+
+	gofmt "go/format"
 )
 
-func Format(this js.Value, args []js.Value) any {
-	input := ([]byte)(args[0].String())
+var (
+	input, output []byte
+)
 
-	output, err := format.Source(input)
-	if err != nil {
-		return []any{true, err.Error()}
+//go:wasmexport alloc
+func alloc(size uint32) uint32 {
+	if size == 0 {
+		input = nil
+		return 0
 	}
 
-	return []any{false, string(output)}
+	input = make([]byte, size)
+	return uint32(uintptr(unsafe.Pointer(&input[0])))
 }
 
-func main() {
-	done := make(chan bool)
-	js.Global().Set("format", js.FuncOf(Format))
-	<-done
+//go:wasmexport dispose
+func dispose() {
+	input = nil
+	output = nil
+}
+
+//go:wasmexport format
+func format() uint32 {
+	var err error
+	output, err = gofmt.Source(input)
+	if err != nil {
+		output = []byte(err.Error())
+		return 2
+	}
+
+	if bytes.Equal(input, output) {
+		return 0
+	}
+
+	return 1
+}
+
+//go:wasmexport output_ptr
+func outputPtr() uint32 {
+	if len(output) == 0 {
+		return 0
+	}
+	return uint32(uintptr(unsafe.Pointer(&output[0])))
+}
+
+//go:wasmexport output_len
+func outputLen() uint32 {
+	return uint32(len(output))
 }

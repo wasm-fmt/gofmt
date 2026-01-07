@@ -18,17 +18,14 @@
 		"url": "https://github.com/wasm-fmt/gofmt/issues"
 	},
 	"type": "module",
-	"main": "gofmt.js",
-	"module": "gofmt.js",
-	"types": "gofmt.d.ts",
 	"exports": {
 		".": {
-			"types": "./gofmt.d.ts",
+			"types": "./gofmt_entry.d.ts",
 			"node": "./gofmt_node.js",
-			"default": "./gofmt.js"
+			"default": "./gofmt_web.js"
 		},
 		"./vite": {
-			"types": "./gofmt.d.ts",
+			"types": "./gofmt_entry.d.ts",
 			"default": "./gofmt_vite.js"
 		},
 		"./package.json": "./package.json",
@@ -36,6 +33,7 @@
 	},
 	"scripts": {
 		"build": "./scripts/build.sh",
+		"test:go": "go test ./src -v",
 		"test:node": "node --test test_node/node.test.js",
 		"test:deno": "deno test test_deno --allow-read",
 		"test:bun": "bun test test_bun"
@@ -45,8 +43,5 @@
 	},
 	"publishConfig": {
 		"access": "public"
-	},
-	"devDependencies": {
-		"@ast-grep/napi": "0.40.3"
 	}
 }
