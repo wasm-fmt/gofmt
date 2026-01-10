@@ -48,7 +48,7 @@ jobs:
               run: npm pack
 
             - name: Publish to Github Releases
-              uses: softprops/action-gh-release@9d7c94cfd0a1f3ed45544c887983e9fa900f0564
+              uses: softprops/action-gh-release@5122b4edc95f85501a71628a57dc180a03ec7588
               with:
                   files: |
                       wasm-fmt-*.tgz
