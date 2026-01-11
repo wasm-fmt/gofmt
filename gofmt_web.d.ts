@@ -17,4 +17,4 @@ export default function initAsync(init_input?: InitInput): Promise<InitOutput>;
  */
 export declare function initSync(buffer_or_module: BufferSource | WebAssembly.Module): InitOutput;
 
-export * from "gofmt_entry.d.ts";
+export * from "./gofmt_entry.d.ts";
