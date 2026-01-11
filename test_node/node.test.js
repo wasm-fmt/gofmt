@@ -8,26 +8,12 @@ import { format } from "../gofmt_node.js";
 
 const test_root = fileURLToPath(new URL("../test_data", import.meta.url));
 
-for await (const dirent of await fs.opendir(test_root, { recursive: true })) {
-	if (!dirent.isFile()) {
-		continue;
-	}
-
-	const input_path = path.join(dirent.parentPath, dirent.name);
-	const ext = path.extname(input_path);
-
-	switch (ext) {
-		case ".input":
-			break;
-
-		default:
-			continue;
-	}
-
+for await (const input_path of fs.glob(`${test_root}/**/*.input`)) {
 	const test_name = path.relative(test_root, input_path);
+	const expect_path = input_path.replace(/\.input$/, ".golden");
 	const [input, expected] = await Promise.all([
 		fs.readFile(input_path, { encoding: "utf-8" }),
-		fs.readFile(input_path.replace(ext, ".golden"), { encoding: "utf-8" }),
+		fs.readFile(expect_path, { encoding: "utf-8" }),
 	]);
 
 	const actual = format(input);
