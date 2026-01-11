@@ -1,9 +1,10 @@
+#!/usr/bin/env node --test
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
-import { format } from "../gofmt_esm.js";
+import { format } from "../gofmt_node.js";
 
 const test_root = fileURLToPath(new URL("../test_data", import.meta.url));
 
@@ -29,7 +30,7 @@ for await (const dirent of await fs.opendir(test_root, { recursive: true })) {
 		fs.readFile(input_path.replace(ext, ".golden"), { encoding: "utf-8" }),
 	]);
 
-	const actual = format(input, input_path);
+	const actual = format(input);
 
 	test(test_name, () => {
 		assert.equal(actual, expected);

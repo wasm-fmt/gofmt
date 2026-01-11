@@ -1,47 +1,23 @@
+#!/usr/bin/env bun test
+import { Glob } from "bun";
 import { expect, test } from "bun:test";
-import fs from "node:fs/promises";
 import path from "node:path";
-import init, { format } from "../gofmt_node.js";
+import init, { format } from "../gofmt_web.js";
 
 await init();
 
-async function* walk(dir: string): AsyncGenerator<string> {
-	for await (const d of await fs.readdir(dir)) {
-		const entry = path.join(dir, d);
-		const stat = await fs.stat(entry);
+const test_root = path.join(import.meta.dir, "../test_data");
+const glob = new Glob("*.{input}");
 
-		if (stat.isDirectory()) {
-			yield* walk(entry);
-		}
+for await (const input_path of glob.scan({ cwd: test_root })) {
+	const full_input_path = path.join(test_root, input_path);
+	const expect_path = full_input_path.replace(/input$/, "golden");
 
-		if (stat.isFile()) {
-			yield entry;
-		}
-	}
-}
-
-const test_root = Bun.fileURLToPath(new URL("../test_data", import.meta.url));
-
-for await (const input_path of walk(test_root)) {
-	const ext = path.extname(input_path);
-
-	switch (ext) {
-		case ".input":
-			break;
-
-		default:
-			continue;
-	}
-
-	const test_name = path.relative(test_root, input_path);
-	const [input, expected] = await Promise.all([
-		Bun.file(input_path).text(),
-		Bun.file(input_path.replace(ext, ".golden")).text(),
-	]);
+	const [input, expected] = await Promise.all([Bun.file(full_input_path).text(), Bun.file(expect_path).text()]);
 
 	const actual = format(input);
 
-	test(test_name, () => {
+	test(input_path, () => {
 		expect(actual).toBe(expected);
 	});
 }

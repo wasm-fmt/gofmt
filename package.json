@@ -21,18 +21,37 @@
 	"exports": {
 		".": {
 			"types": "./gofmt_entry.d.ts",
+			"webpack": "./gofmt_bundle.js",
 			"node": "./gofmt_node.js",
+			"default": "./gofmt_esm.js"
+		},
+		"./esm": {
+			"types": "./gofmt_entry.d.ts",
+			"default": "./gofmt_esm.js"
+		},
+		"./node": {
+			"types": "./gofmt_entry.d.ts",
+			"default": "./gofmt_node.js"
+		},
+		"./bundler": {
+			"types": "./gofmt_entry.d.ts",
+			"default": "./gofmt_bundle.js"
+		},
+		"./web": {
+			"types": "./gofmt_web.d.ts",
 			"default": "./gofmt_web.js"
 		},
 		"./vite": {
-			"types": "./gofmt_entry.d.ts",
+			"types": "./gofmt_web.d.ts",
 			"default": "./gofmt_vite.js"
 		},
+		"./wasm": "./gofmt.wasm",
 		"./package.json": "./package.json",
 		"./*": "./*"
 	},
 	"scripts": {
 		"build": "./scripts/build.sh",
+		"fmt": "dprint fmt",
 		"test:go": "go test ./src -v",
 		"test:node": "node --test test_node/node.test.js",
 		"test:deno": "deno test test_deno --allow-read",

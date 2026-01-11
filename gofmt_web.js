@@ -1,4 +1,9 @@
-/* @ts-self-types="./gofmt_entry.d.ts" */
+/* @ts-self-types="./gofmt_web.d.ts" */
+/**
+ * Loads the Wasm module via Web Fetch API (browsers).
+ * Requires calling init().
+ * @module
+ */
 import { format as _format } from "./gofmt.js";
 let wasm, wasmModule;
 
@@ -8,13 +13,9 @@ async function load(module, imports) {
 			try {
 				return await WebAssembly.instantiateStreaming(module, imports);
 			} catch (e) {
-				const validResponse =
-					module.ok && expectedResponseType(module.type);
+				const validResponse = module.ok && expectedResponseType(module.type);
 
-				if (
-					validResponse &&
-					module.headers.get("Content-Type") !== "application/wasm"
-				) {
+				if (validResponse && module.headers.get("Content-Type") !== "application/wasm") {
 					console.warn(
 						"`WebAssembly.instantiateStreaming` failed because your server does not serve Wasm with `application/wasm` MIME type. Falling back to `WebAssembly.instantiate` which is slower. Original error:\n",
 						e,
@@ -49,7 +50,7 @@ async function load(module, imports) {
 }
 
 function finalize_init(instance, module) {
-	wasm = instance.exports, wasmModule = module;
+	((wasm = instance.exports), (wasmModule = module));
 	wasm._initialize();
 	return wasm;
 }

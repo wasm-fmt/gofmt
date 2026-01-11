@@ -1,3 +1,7 @@
+/**
+ * WebAssembly module for gofmt.
+ * @module
+ */
 export declare const memory: WebAssembly.Memory;
 export declare function _initialize(): void;
 export declare function alloc(size: number): number;

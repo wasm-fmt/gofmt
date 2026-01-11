@@ -16,8 +16,28 @@ npx jsr add @fmt/gofmt
 
 # Usage
 
-```JavaScript
-import init, { format } from "@wasm-fmt/gofmt";
+## Node.js / Deno / Bun / Bundler
+
+```javascript
+import { format } from "@wasm-fmt/gofmt";
+
+const source = `
+package main
+import "fmt"
+func main(){fmt.Println("Hello, 世界")
+}
+`;
+
+const formatted = format(source);
+console.log(formatted);
+```
+
+## Web
+
+For web environments, you need to initialize WASM module manually:
+
+```javascript
+import init, { format } from "@wasm-fmt/gofmt/web";
 
 await init();
 
@@ -32,11 +52,23 @@ const formatted = format(source);
 console.log(formatted);
 ```
 
-Vite users tip:
+### Vite
 
 ```JavaScript
 import init, { format } from "@wasm-fmt/gofmt/vite";
+
+await init();
+// ...
 ```
+
+## Entry Points
+
+- `.` - Auto-detects environment (Node.js uses node, Webpack uses bundler, default is ESM)
+- `./node` - Node.js environment (no init required)
+- `./esm` - ESM environments like Deno (no init required)
+- `./bundler` - Bundlers like Webpack (no init required)
+- `./web` - Web browsers (requires manual init)
+- `./vite` - Vite bundler (requires manual init)
 
 # Build from source
 
@@ -49,8 +81,8 @@ import init, { format } from "@wasm-fmt/gofmt/vite";
 git clone https://github.com/wasm-fmt/gofmt.git
 
 # 4. build
-pnpm build
+npm run build
 
-# 5. test
-pnpm run /^test:/
+# 6. test
+npm run test:node
 ```

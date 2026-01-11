@@ -1,9 +1,37 @@
-/* @ts-self-types="./gofmt_entry.d.ts" */
+/* @ts-self-types="./gofmt_web.d.ts" */
+/**
+ * Loads the Wasm module for Vite and bundlers supporting `?init` imports.
+ * @module
+ */
+import init from "./gofmt.wasm?init";
 import initAsync from "./gofmt_web.js";
-import wasm_url from "./gofmt.wasm?url";
+import { format as _format } from "./gofmt.js";
 
-export default function (input = wasm_url) {
-	return initAsync(input);
+let wasm, wasmModule;
+
+function finalize_init(instance, module) {
+	wasm = instance.exports;
+	wasmModule = module;
+	wasm._initialize();
+	return wasm;
 }
 
-export * from "./gofmt_web.js";
+export default async function initAsync() {
+	if (wasm !== void 0) return wasm;
+	const instance = await init();
+	return finalize_init(instance);
+}
+
+export function initSync(module) {
+	if (wasm !== void 0) return wasm;
+
+	if (!(module instanceof WebAssembly.Module)) {
+		module = new WebAssembly.Module(module);
+	}
+	const instance = new WebAssembly.Instance(module);
+	return finalize_init(instance, module);
+}
+
+export function format(source) {
+	return _format(wasm, source);
+}

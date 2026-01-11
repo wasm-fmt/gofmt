@@ -11,7 +11,16 @@ const pkg_json = JSON.parse(pkg_text);
 
 const jsr_path = path.resolve(pkg_path, "..", "jsr.jsonc");
 pkg_json.name = "@fmt/gofmt";
-pkg_json.exports = "./gofmt_web.js";
+pkg_json.exports = {
+	".": "./gofmt_esm.js",
+	"./esm": "./gofmt_esm.js",
+	"./node": "./gofmt_node.js",
+	"./bundler": "./gofmt_bundle.js",
+	"./web": "./gofmt_web.js",
+	// jsr does not support imports from wasm?init
+	// "./vite": "./gofmt_vite.js",
+	"./wasm": "./gofmt.wasm",
+};
 pkg_json.exclude = [
 	"!**",
 	"test_*",
@@ -20,10 +29,13 @@ pkg_json.exclude = [
 	"node_modules",
 	"jsconfig.json",
 	"tsconfig.json",
+	"dprint.json",
 	"*.tgz",
 	"*.sh",
 	"*.patch",
 	"*.mod",
+	"*.sum",
+	"*.lock",
 	".*",
 ];
 fs.writeFileSync(jsr_path, JSON.stringify(pkg_json, null, 4));

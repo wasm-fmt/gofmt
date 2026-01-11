@@ -1,10 +1,11 @@
+#!/usr/bin/env deno test --allow-read --parallel
 import { format } from "../gofmt_esm.js";
 
-import { assertEquals } from "https://deno.land/std@0.201.0/assert/mod.ts";
-import { walk } from "https://deno.land/std@0.201.0/fs/walk.ts";
-import { relative } from "https://deno.land/std@0.201.0/path/mod.ts";
+import { assertEquals } from "jsr:@std/assert";
+import { walk } from "jsr:@std/fs";
+import { fromFileUrl, relative } from "jsr:@std/path";
 
-const test_root = new URL("../test_data", import.meta.url);
+const test_root = fromFileUrl(new URL("../test_data", import.meta.url));
 
 for await (const entry of walk(test_root, {
 	includeDirs: false,
@@ -16,7 +17,7 @@ for await (const entry of walk(test_root, {
 	const actual = format(input);
 	const expected = Deno.readTextFileSync(expect_path);
 
-	const test_name = relative(test_root.pathname, entry.path);
+	const test_name = relative(test_root, entry.path);
 
 	Deno.test(test_name, () => {
 		assertEquals(actual, expected);
