@@ -20,22 +20,23 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"types": "./gofmt_entry.d.ts",
-			"webpack": "./gofmt_bundle.js",
-			"node": "./gofmt_node.js",
+			"types": "./gofmt.d.ts",
+			"webpack": "./gofmt.js",
+			"deno": "./gofmt.js",
+			"module-sync": "./gofmt_node.js",
 			"default": "./gofmt_esm.js"
 		},
 		"./esm": {
-			"types": "./gofmt_entry.d.ts",
+			"types": "./gofmt.d.ts",
 			"default": "./gofmt_esm.js"
 		},
 		"./node": {
-			"types": "./gofmt_entry.d.ts",
+			"types": "./gofmt.d.ts",
 			"default": "./gofmt_node.js"
 		},
 		"./bundler": {
-			"types": "./gofmt_entry.d.ts",
-			"default": "./gofmt_bundle.js"
+			"types": "./gofmt.d.ts",
+			"default": "./gofmt.js"
 		},
 		"./web": {
 			"types": "./gofmt_web.d.ts",

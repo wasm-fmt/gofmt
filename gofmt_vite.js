@@ -1,11 +1,7 @@
 /* @ts-self-types="./gofmt_web.d.ts" */
-/**
- * Loads the Wasm module for Vite and bundlers supporting `?init` imports.
- * @module
- */
 import init from "./gofmt.wasm?init";
 import initAsync from "./gofmt_web.js";
-import { format as _format } from "./gofmt.js";
+import { format as _format } from "./gofmt_binding.js";
 
 let wasm, wasmModule;
 

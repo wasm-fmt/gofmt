@@ -2,24 +2,23 @@
 import { format } from "../gofmt_esm.js";
 
 import { assertEquals } from "jsr:@std/assert";
-import { walk } from "jsr:@std/fs";
+import { expandGlob } from "jsr:@std/fs";
 import { fromFileUrl, relative } from "jsr:@std/path";
 
 const test_root = fromFileUrl(new URL("../test_data", import.meta.url));
 
-for await (const entry of walk(test_root, {
-	includeDirs: false,
-	exts: ["input"],
-})) {
-	const expect_path = entry.path.replace(/input$/, "golden");
-	const input = Deno.readTextFileSync(entry.path);
+for await (const { path: input_path, name: case_name } of expandGlob("**/*.input", { root: test_root })) {
+	if (case_name.startsWith(".")) {
+		Deno.test.ignore(case_name, () => {});
+		continue;
+	}
 
-	const actual = format(input);
-	const expected = Deno.readTextFileSync(expect_path);
+	const expect_path = input_path.replace(/input$/, "golden");
 
-	const test_name = relative(test_root, entry.path);
+	const [input, expected] = await Promise.all([Deno.readTextFile(input_path), Deno.readTextFile(expect_path)]);
 
-	Deno.test(test_name, () => {
+	Deno.test(case_name, () => {
+		const actual = format(input);
 		assertEquals(actual, expected);
 	});
 }

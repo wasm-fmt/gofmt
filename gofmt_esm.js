@@ -1,11 +1,7 @@
-/* @ts-self-types="./gofmt_entry.d.ts" */
-/**
- * Loads the Wasm module via source phase import.
- * @module
- */
+/* @ts-self-types="./gofmt.d.ts" */
 // prettier-ignore
 import source wasmModule from "./gofmt.wasm";
-import { format as _format } from "./gofmt.js";
+import { format as _format } from "./gofmt_binding.js";
 /**
  * @import * as WASM from "./gofmt.wasm"
  */
