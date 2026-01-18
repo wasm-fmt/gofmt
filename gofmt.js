@@ -1,5 +1,5 @@
 /* @ts-self-types="./gofmt.d.ts" */
-import wasm from "./gofmt.wasm";
+import * as wasm from "./gofmt.wasm";
 import { format as _format } from "./gofmt_binding.js";
 
 wasm._initialize();
