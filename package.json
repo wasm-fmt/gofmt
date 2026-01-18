@@ -23,7 +23,9 @@
 			"types": "./gofmt.d.ts",
 			"webpack": "./gofmt.js",
 			"deno": "./gofmt.js",
+			"bun": "./gofmt_node.js",
 			"module-sync": "./gofmt_node.js",
+			"node": "./gofmt_node.js",
 			"default": "./gofmt_esm.js"
 		},
 		"./esm": {
