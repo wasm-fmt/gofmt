@@ -1,6 +1,7 @@
 #!/usr/bin/env bun test
 import { Glob } from "bun";
 import { expect, test } from "bun:test";
+
 import init, { format } from "../gofmt_web.js";
 
 await init();
@@ -14,7 +15,7 @@ for await (const case_name of new Glob("**/*.input").scan({ cwd: test_root, dot:
 	}
 
 	const input_path = `${test_root}/${case_name}`;
-	const expect_path = input_path.replace(/input$/, "golden");
+	const expect_path = input_path + ".golden";
 
 	const [input, expected] = await Promise.all([Bun.file(input_path).text(), Bun.file(expect_path).text()]);
 

@@ -22,6 +22,5 @@ go.work
 
 gofmt.wasm
 *.tgz
-jsr.jsonc
 
 node_modules

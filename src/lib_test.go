@@ -38,7 +38,7 @@ func TestGofmtSource(t *testing.T) {
 				t.Fatalf("failed to format: %v", err)
 			}
 
-			goldenPath := strings.TrimSuffix(inputPath, ".input") + ".golden"
+			goldenPath := inputPath + ".golden"
 
 			if *update {
 				if err := os.WriteFile(goldenPath, output, 0644); err != nil {

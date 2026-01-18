@@ -1,0 +1,24 @@
+{
+	"$schema": "https://jsr.io/schema/config-file.v1.json",
+	"name": "@fmt/gofmt",
+	"version": "0.7.0",
+	"license": "MIT",
+	"exports": {
+		".": "./gofmt.js",
+		"./esm": "./gofmt_esm.js",
+		"./node": "./gofmt_node.js",
+		"./bundler": "./gofmt.js",
+		"./web": "./gofmt_web.js"
+	},
+	"publish": {
+		"include": [
+			"gofmt_*",
+			"gofmt.*",
+			"*.md",
+			"LICENSE"
+		],
+		"exclude": [
+			"!*.wasm"
+		]
+	}
+}

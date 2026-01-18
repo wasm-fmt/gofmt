@@ -6,9 +6,16 @@ on:
             - "*"
     pull_request:
         types: ["opened", "reopened", "synchronize"]
+    workflow_dispatch:
 
 jobs:
-    build:
+    go-test:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v6
+            - run: npm run test:go
+
+    wasm-build:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v6
@@ -17,69 +24,47 @@ jobs:
               with:
                   node-version-file: ".node-version"
 
-            - run: |
+            - name: Install TinyGo
+              run: |
                   wget -P ${{ runner.temp }} https://github.com/tinygo-org/tinygo/releases/download/v0.40.1/tinygo_0.40.1_amd64.deb
                   yes | sudo dpkg -i ${{ runner.temp }}/tinygo_0.40.1_amd64.deb
 
-            - name: Build
-              run: scripts/build.sh
-              shell: bash
-
+            - run: npm run build
             - run: npm pack
+
             - name: Upload
               uses: actions/upload-artifact@v6
               with:
                   name: build
                   path: |
-                      gofmt.js
-                      gofmt.wasm
+                      *.wasm
                       *.tgz
 
-    deno-test:
-        runs-on: ubuntu-latest
-        needs: build
+    wasm-test:
+        name: Run ${{ matrix.runtime }} tests on ${{ matrix.os }}
+        runs-on: ${{ matrix.os }}
+        needs: wasm-build
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+                runtime: [node, deno, bun]
         steps:
             - uses: actions/checkout@v6
             - uses: actions/download-artifact@v7
               with:
                   name: build
-                  path: ./
-
-            - uses: denoland/setup-deno@v1
-              name: Install Deno
-              with:
-                  deno-version: 2.x
-
-            - run: deno test test_deno --allow-read
-
-    node-test:
-        runs-on: ubuntu-latest
-        needs: build
-        steps:
-            - uses: actions/checkout@v6
-            - uses: actions/download-artifact@v7
-              with:
-                  name: build
-                  path: ./
 
             - uses: actions/setup-node@v6
-              name: Install Node
+              if: matrix.runtime == 'node'
               with:
                   node-version-file: ".node-version"
-
-            - run: node --test test_node/node.test.js
-
-    bun-test:
-        runs-on: ubuntu-latest
-        needs: build
-        steps:
-            - uses: actions/checkout@v6
-            - uses: actions/download-artifact@v7
+            - uses: denoland/setup-deno@v2
+              if: matrix.runtime == 'deno'
               with:
-                  name: build
-                  path: ./
-
+                  deno-version: 2.x
             - uses: oven-sh/setup-bun@v2
+              if: matrix.runtime == 'bun'
               name: Install bun
 
-            - run: bun test test_bun
+            - run: npm run test:${{ matrix.runtime }}

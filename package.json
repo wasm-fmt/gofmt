@@ -11,7 +11,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/wasm-fmt/gofmt"
+		"url": "git+https://github.com/wasm-fmt/gofmt.git"
 	},
 	"homepage": "https://github.com/wasm-fmt/gofmt",
 	"bugs": {
@@ -51,12 +51,13 @@
 		"./*": "./*"
 	},
 	"scripts": {
-		"build": "./scripts/build.sh",
+		"build": "tinygo build -o=gofmt.wasm -target=wasm-unknown -no-debug ./src/lib.go",
 		"fmt": "dprint fmt",
 		"test:go": "go test ./src -v",
 		"test:node": "node --test test_node/node.test.js",
 		"test:deno": "deno test test_deno --allow-read",
-		"test:bun": "bun test test_bun"
+		"test:bun": "bun test test_bun",
+		"version": "node ./scripts/sync_version.js && git add ."
 	},
 	"engines": {
 		"node": ">=16.17.0"
