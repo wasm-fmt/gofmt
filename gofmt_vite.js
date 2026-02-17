@@ -1,6 +1,5 @@
 /* @ts-self-types="./gofmt_web.d.ts" */
 import init from "./gofmt.wasm?init";
-import initAsync from "./gofmt_web.js";
 import { format as _format } from "./gofmt_binding.js";
 
 let wasm, wasmModule;
