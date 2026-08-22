@@ -19,7 +19,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v7
-            - uses: actions/setup-node@v6
+            - uses: actions/setup-node@v7
               name: Install Node
               with:
                   node-version-file: ".node-version"
@@ -55,7 +55,7 @@ jobs:
               with:
                   name: build
 
-            - uses: actions/setup-node@v6
+            - uses: actions/setup-node@v7
               if: matrix.runtime == 'node'
               with:
                   node-version-file: ".node-version"

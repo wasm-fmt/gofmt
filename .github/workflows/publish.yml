@@ -11,7 +11,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v7
-            - uses: actions/setup-node@v6
+            - uses: actions/setup-node@v7
               with:
                   node-version-file: ".node-version"
 
@@ -42,7 +42,7 @@ jobs:
               with:
                   name: build
 
-            - uses: actions/setup-node@v6
+            - uses: actions/setup-node@v7
               with:
                   node-version-file: ".node-version"
                   registry-url: "https://registry.npmjs.org"
@@ -62,7 +62,7 @@ jobs:
               with:
                   name: build
 
-            - uses: actions/setup-node@v6
+            - uses: actions/setup-node@v7
               with:
                   node-version-file: ".node-version"
                   registry-url: "https://npm.pkg.github.com"
@@ -85,7 +85,7 @@ jobs:
               with:
                   name: build
 
-            - uses: actions/setup-node@v6
+            - uses: actions/setup-node@v7
               with:
                   node-version-file: ".node-version"
 
