@@ -25,3 +25,11 @@ for await (const case_name of glob("**/*.input", { cwd: test_root })) {
 		assert.equal(actual, expected);
 	});
 }
+
+test("optional path", () => {
+	assert.equal(format("package main\n", "main.go"), "package main\n");
+});
+
+test("config is rejected", () => {
+	assert.throws(() => format("package main\n", {}), /does not accept configuration/);
+});

@@ -6,6 +6,8 @@ jsr.jsonc
 jsconfig.json
 tsconfig.json
 dprint.json
+bridge.bindings.mjs
+bindings
 *.tgz
 *.sh
 *.patch

@@ -11,7 +11,16 @@
 	"yaml": {},
 	"excludes": [
 		"**/*-lock.json",
-		"**/node_modules"
+		"**/node_modules",
+		"gofmt.js",
+		"gofmt_esm.js",
+		"gofmt_node.js",
+		"gofmt_vite.js",
+		"gofmt_web.d.ts",
+		"gofmt_web.js",
+		"gofmt.wasm.d.ts",
+		"gofmt_factory.js",
+		"gofmt_factory.d.ts"
 	],
 	"plugins": [
 		"https://plugins.dprint.dev/json-0.21.1.wasm",

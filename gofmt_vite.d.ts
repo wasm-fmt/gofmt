@@ -4,16 +4,7 @@ type InitOutput = typeof InitOutput;
 
 export type SyncInitInput = BufferSource | WebAssembly.Module;
 
-export type InitInput =
-	| RequestInfo
-	| URL
-	| Response
-	| BufferSource
-	| WebAssembly.Module;
-
-export default function initAsync(
-	input?: InitInput | Promise<InitInput>,
-): Promise<InitOutput>;
+export default function initAsync(): Promise<InitOutput>;
 export declare function initSync(input: SyncInitInput): InitOutput;
 
 export * from "./gofmt.d.ts";

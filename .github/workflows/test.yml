@@ -23,13 +23,18 @@ jobs:
               name: Install Node
               with:
                   node-version-file: ".node-version"
+            - uses: denoland/setup-deno@v2
+              with:
+                  deno-version: 2.x
 
             - name: Install TinyGo
               run: |
-                  wget -P ${{ runner.temp }} https://github.com/tinygo-org/tinygo/releases/download/v0.40.1/tinygo_0.40.1_amd64.deb
-                  yes | sudo dpkg -i ${{ runner.temp }}/tinygo_0.40.1_amd64.deb
+                  wget -P ${{ runner.temp }} https://github.com/tinygo-org/tinygo/releases/download/v0.42.0/tinygo_0.42.0_amd64.deb
+                  yes | sudo dpkg -i ${{ runner.temp }}/tinygo_0.42.0_amd64.deb
 
+            - run: npm install --ignore-scripts --no-package-lock
             - run: npm run build
+            - run: npm run check:bindings
             - run: npm pack
 
             - name: Upload
@@ -56,7 +61,6 @@ jobs:
                   name: build
 
             - uses: actions/setup-node@v6
-              if: matrix.runtime == 'node'
               with:
                   node-version-file: ".node-version"
             - uses: denoland/setup-deno@v2
@@ -67,4 +71,5 @@ jobs:
               if: matrix.runtime == 'bun'
               name: Install bun
 
+            - run: npm install --ignore-scripts --no-package-lock
             - run: npm run test:${{ matrix.runtime }}

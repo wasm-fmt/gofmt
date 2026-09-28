@@ -7,8 +7,6 @@ import (
 	"runtime"
 	"strings"
 	"testing"
-
-	gofmt "go/format"
 )
 
 var update = flag.Bool("update", false, "update golden files")
@@ -33,7 +31,7 @@ func TestGofmtSource(t *testing.T) {
 				t.Fatalf("failed to read input file: %v", err)
 			}
 
-			output, err := gofmt.Source(input)
+			output, err := formatSource(input)
 			if err != nil {
 				t.Fatalf("failed to format: %v", err)
 			}

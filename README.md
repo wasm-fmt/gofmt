@@ -32,6 +32,12 @@ const formatted = format(source);
 console.log(formatted);
 ```
 
+With an optional file path:
+
+```javascript
+const formatted = format(source, "main.go");
+```
+
 ## Web
 
 For web environments, you need to initialize WASM module manually:

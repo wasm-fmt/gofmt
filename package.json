@@ -1,9 +1,9 @@
 {
 	"name": "@wasm-fmt/gofmt",
 	"description": "A wasm based golang formatter",
-	"author": "magic-akari <akari.ccino@gamil.com>",
+	"author": "magic-akari <akari.ccino@gmail.com>",
 	"version": "0.7.3",
-	"license": "MIT",
+	"license": "MIT OR Apache-2.0",
 	"keywords": [
 		"wasm",
 		"golang",
@@ -45,7 +45,7 @@
 			"default": "./gofmt_web.js"
 		},
 		"./vite": {
-			"types": "./gofmt_web.d.ts",
+			"types": "./gofmt_vite.d.ts",
 			"default": "./gofmt_vite.js"
 		},
 		"./wasm": "./gofmt.wasm",
@@ -53,7 +53,10 @@
 		"./*": "./*"
 	},
 	"scripts": {
-		"build": "tinygo build -o=gofmt.wasm -target=wasm-unknown -no-debug ./src/lib.go",
+		"build": "tinygo build -o=gofmt.wasm -target=wasm-unknown -gc=conservative -no-debug ./src && npm run build:bindings",
+		"build:bindings": "wasm-fmt-bindgen",
+		"check": "dprint check && npm run check:bindings",
+		"check:bindings": "deno check bindings/gofmt_binding.js",
 		"fmt": "dprint fmt",
 		"test:go": "go test ./src -v",
 		"test:node": "node --test test_node/node.test.js",
@@ -61,8 +64,11 @@
 		"test:bun": "bun test test_bun",
 		"version": "node ./scripts/sync_version.js && git add ."
 	},
-	"engines": {
-		"node": ">=16.17.0"
+	"dependencies": {
+		"@wasm-fmt/runtime": "0.0.1"
+	},
+	"devDependencies": {
+		"@wasm-fmt/bindgen": "0.0.1"
 	},
 	"publishConfig": {
 		"access": "public"
