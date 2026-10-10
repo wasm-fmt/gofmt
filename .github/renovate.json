@@ -2,5 +2,16 @@
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
 	"extends": [
 		"config:recommended"
+	],
+	"packageRules": [
+		{
+			"matchPackageNames": [
+				"@wasm-fmt/**",
+				"wasm-fmt-*",
+				"github.com/wasm-fmt/**"
+			],
+			"groupName": "wasm-fmt",
+			"separateMajorMinor": false
+		}
 	]
 }
