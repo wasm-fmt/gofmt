@@ -1,2 +1,4 @@
 github.com/wasm-fmt/bridge/fdk-go v0.0.1 h1:I1rLsrJfoVhGh6jSKuh77QoaTtMOWUXvtz7tWJNjaZ8=
 github.com/wasm-fmt/bridge/fdk-go v0.0.1/go.mod h1:s0uCkflVe9aStATKclCC8a1D305O4VSWShZEMhC4Vbs=
+github.com/wasm-fmt/bridge/fdk-go v0.1.0 h1:2+EYhy9VpG5ZC+GwWfk4OeegwBss2mhMvNfvl4AFiJk=
+github.com/wasm-fmt/bridge/fdk-go v0.1.0/go.mod h1:s0uCkflVe9aStATKclCC8a1D305O4VSWShZEMhC4Vbs=
