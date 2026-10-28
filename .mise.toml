@@ -1,3 +1,3 @@
 [tools]
 go = "1.27.2"
-tinygo = "0.43.0"
+tinygo = "0.44.0"
